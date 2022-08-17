@@ -26,7 +26,7 @@ const Simulation: React.FC = () => {
     <>
       <DragSliderAnimation />
 
-      <button onClick={() => dispatch({ type: 'setTime', payload: 10 })}>Set time</button>
+      <button onClick={() => dispatch({ type: 'incrementTime', payload: 10 })}>Set time</button>
 
       <div className='App' style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
         <ForceGraph graphElements={data} />

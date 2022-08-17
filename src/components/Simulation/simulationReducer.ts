@@ -4,10 +4,15 @@ export interface ISumulationState {
   time: number;
 }
 
-export type IAction = {
-  type: 'setTime';
-  payload: number;
-};
+export type IAction =
+  | {
+      type: 'setTime';
+      payload: number;
+    }
+  | {
+      type: 'incrementTime';
+      payload: number;
+    };
 
 export const initialState: ISumulationState = {
   time: 0,
@@ -18,8 +23,10 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
 
   switch (type) {
     case 'setTime': {
-      console.log('SET TIME!');
       return { ...state, time: action.payload };
+    }
+    case 'incrementTime': {
+      return { ...state, time: state.time + action.payload };
     }
     default:
       return state;

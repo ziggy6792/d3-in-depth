@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { D3DragEvent, SimulationLinkDatum } from 'd3';
 import { FundNodeInterface, GraphElements, GroupRootNodeInterface } from './types';
 import { useSimulationContext } from 'src/components/Simulation/SimulaitionProvider';
+import { TSelection } from 'src/d3Types';
 
 type CardSVG = d3.Selection<SVGSVGElement, FundNodeInterface, d3.BaseType, unknown>;
 
@@ -65,10 +66,16 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
   console.log('graphElements', JSON.stringify(graphElements));
 
   const svgRef = useRef(null);
+  const [svg, setSvg] = useState<null | TSelection>(null);
 
   const { time } = useSimulationContext();
 
   useEffect(() => {
+    if (!svg) {
+      setSvg(d3.select(svgRef.current));
+      return;
+    }
+
     const updateGraph = async () => {
       const links = graphElements.links.map((d) => Object.assign({}, d));
       const nodes = graphElements.nodes.map((d) => Object.assign({}, d));
@@ -105,8 +112,6 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         .force('charge', d3.forceManyBody().strength(-240))
         .force('collide', d3.forceCollide(150))
         .force('center', d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2));
-
-      const svg = d3.select(svgRef.current);
 
       const link = svg
         .select('#graph-links')
@@ -152,7 +157,13 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
       });
     };
     updateGraph();
-  }, [graphElements]);
+  }, [graphElements, svg]);
+
+  useEffect(() => {
+    if (!svg) return;
+
+    const labels = svg.select('.fund-label-card').attr('width', time);
+  }, [time, svg]);
 
   return (
     <>

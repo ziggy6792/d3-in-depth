@@ -3,14 +3,13 @@ import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react'
 import * as d3 from 'd3';
 import './DragSliderAnimation.css';
 import useInterval from 'src/hooks/useInterval';
-
-type Selection<T extends d3.BaseType = SVGSVGElement> = d3.Selection<T | null, unknown, null, undefined>;
+import { TSelection } from 'src/d3Types';
 
 const margin = { right: 50, left: 50 };
 
 const DragSliderAnimation: React.FC = () => {
   // Maybe don't need this
-  const [svg, setSvg] = useState<null | Selection>(null);
+  const [svg, setSvg] = useState<null | TSelection>(null);
 
   const svgRef = useRef<null | SVGSVGElement>(null);
   const handleRef = useRef<null | SVGCircleElement>(null);
