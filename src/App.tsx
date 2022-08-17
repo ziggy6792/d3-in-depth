@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { createContext, PropsWithChildren, useReducer } from 'react';
+import { IAction, initialState, ISumulationState, simulationReducer } from './simulationReducer';
 import DragSliderAnimation from './stories/components/DragSliderAnimation/DragSliderAnimation';
 import { ForceGraph, GraphElements } from './stories/components/ForceGraph';
 
@@ -18,15 +19,33 @@ const data = {
   ],
 } as GraphElements;
 
+type DContextType = {
+  dispatch?: (tenantId: IAction) => void;
+};
+
+const DispatchSimulationContext = createContext<DContextType>({});
+
+const SimulationContext = createContext<ISumulationState | null>(null);
+
+export const SimulationProvier: React.FC<PropsWithChildren<unknown>> = ({ children }) => {
+  const [state, dispatch] = useReducer(simulationReducer, initialState);
+
+  return (
+    <DispatchSimulationContext.Provider value={{ dispatch }}>
+      <SimulationContext.Provider value={state}>{children}</SimulationContext.Provider>
+    </DispatchSimulationContext.Provider>
+  );
+};
+
 const App: React.FC = () => {
   return (
-    <>
+    <SimulationProvier>
       <DragSliderAnimation />
 
       <div className='App' style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
         <ForceGraph graphElements={data} />
       </div>
-    </>
+    </SimulationProvier>
   );
 };
 
