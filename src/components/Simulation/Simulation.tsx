@@ -5,10 +5,10 @@ import { useDispatchSimulationContext, useSimulationContext } from './Simulaitio
 
 const data = {
   nodes: [
-    { id: '0', type: 'FUND', details: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: false } },
-    { id: '1', type: 'FUND', details: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: true } },
-    { id: '2', type: 'FUND', details: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: true } },
-    { id: '3', type: 'FUND', details: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: true } },
+    { id: '0', details: { name: 'A' } },
+    { id: '1', details: { name: 'B' } },
+    { id: '2', details: { name: 'C' } },
+    { id: '3', details: { name: 'D' } },
   ],
   links: [
     { source: '3', target: '0' },

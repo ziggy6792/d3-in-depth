@@ -18,30 +18,19 @@ const generateCard = (cardElement: CardSVG) => {
   cardGroup
     .append('rect')
     .classed('fund-label-card', true)
-    .attr('fill', (d) => (d.type === 'FUND' ? '#18295e' : '#85054d'))
+    .attr('fill', (d) => '#18295e')
     .attr('width', width)
     .attr('height', height)
     .attr('rx', 20);
 
   // Card Contents
   const textOffset = 20;
-  const initialOffset = 25;
+  const initialOffset = 30;
 
   cardGroup
     .append('text')
-    .attr('transform', 'translate(20, ' + (textOffset * 0 + initialOffset) + ')')
-    .text((d) => (d.type === 'FUND' ? d?.details?.year || null : ''));
-  cardGroup
-    .append('text')
-    .attr('transform', 'translate(20, ' + (textOffset * 1 + initialOffset) + ')')
-    .text((d) => (d.type === 'FUND' ? d?.details?.type || null : ''));
-  cardGroup
-    .append('text')
-    .attr('transform', 'translate(20, ' + (textOffset * 2 + initialOffset) + ')')
-    .text((d) => {
-      if (d.type === 'FUND') return d?.details?.isOpen ? 'Open' : 'Closed';
-      return '';
-    });
+    .attr('transform', 'translate(25, ' + (textOffset * 0 + initialOffset) + ')')
+    .text((d) => d?.details?.name || null);
 
   cardGroup.selectAll('text').style('fill', 'white');
 };
@@ -50,12 +39,10 @@ interface FundGraphGeneratorProps {
   graphElements: GraphElements;
 }
 
-const width = 200;
-const height = 120;
+const width = 60;
+const height = 60;
 
 export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements }) => {
-  console.log('graphElements', JSON.stringify(graphElements));
-
   const svgRef = useRef(null);
   const [svg, setSvg] = useState<null | TSelection>(null);
 
@@ -158,7 +145,6 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
 
   return (
     <>
-      {time}
       <svg ref={svgRef} width={'100%'} height={1000} id='graph-svg'>
         <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
         <g id='graph-nodes'></g>
