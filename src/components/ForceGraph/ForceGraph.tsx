@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { D3DragEvent, SimulationLinkDatum } from 'd3';
 import { FundNodeInterface, GraphElements, GroupRootNodeInterface } from './types';
-import { useSimulationContext } from 'src/stories/simulation/SimulaitionProvider';
+import { useSimulationContext } from 'src/components/Simulation/SimulaitionProvider';
 
 type CardSVG = d3.Selection<SVGSVGElement, FundNodeInterface, d3.BaseType, unknown>;
 

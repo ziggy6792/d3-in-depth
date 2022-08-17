@@ -1,6 +1,6 @@
 import React from 'react';
-import { SimulationProvier } from './stories/simulation/SimulaitionProvider';
-import Simulation from './stories/simulation/Simulation';
+import { SimulationProvier } from './components/Simulation/SimulaitionProvider';
+import Simulation from './components/Simulation/Simulation';
 
 const App: React.FC = () => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
-import DragSliderAnimation from 'src/stories/components/DragSliderAnimation/DragSliderAnimation';
-import { GraphElements, ForceGraph } from 'src/stories/components/ForceGraph';
+import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
+import { GraphElements, ForceGraph } from 'src/components/ForceGraph';
 import { useDispatchSimulationContext } from './SimulaitionProvider';
 
 const data = {
