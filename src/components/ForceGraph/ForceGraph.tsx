@@ -11,6 +11,9 @@ type Simulation = d3.Simulation<NodeInterface, SimulationLinkDatum<NodeInterface
 
 type DragEvent = D3DragEvent<SVGCircleElement, NodeInterface, NodeInterface>;
 
+const selectedColor = '#85054d';
+const unselectedColor = '#18295e';
+
 const generateCard = (cardElement: CardSVG) => {
   const cardGroup = cardElement.append('g');
 
@@ -18,7 +21,7 @@ const generateCard = (cardElement: CardSVG) => {
   cardGroup
     .append('rect')
     .classed('fund-label-card', true)
-    .attr('fill', (d) => '#18295e')
+    .attr('fill', (d) => unselectedColor)
     .attr('width', width)
     .attr('height', height)
     .attr('rx', 20);
@@ -46,7 +49,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
   const svgRef = useRef(null);
   const [svg, setSvg] = useState<null | TSelection>(null);
 
-  const { time } = useSimulationContext();
+  const { time, activeNode } = useSimulationContext();
 
   useEffect(() => {
     if (!svg) {
@@ -137,11 +140,16 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
     updateGraph();
   }, [graphElements, svg]);
 
-  // useEffect(() => {
-  //   if (!svg) return;
-
-  //   const labels = svg.selectAll('.fund-label-card').attr('width', time);
-  // }, [time, svg]);
+  useEffect(() => {
+    if (!svg) return;
+    svg
+      .selectAll('.fund-label-card')
+      .data(graphElements.links)
+      .join('rect')
+      .transition()
+      .duration(500)
+      .attr('fill', (d, index) => (index === activeNode ? selectedColor : unselectedColor));
+  }, [activeNode, svg, graphElements]);
 
   return (
     <>

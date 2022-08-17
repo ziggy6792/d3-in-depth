@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
 import { GraphElements, ForceGraph } from 'src/components/ForceGraph';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
@@ -19,12 +19,22 @@ const data = {
   ],
 } as GraphElements;
 
+// Fetched from api
+const nodeSequenceResponse = { [10]: 1, [20]: 2, [50]: 1 };
+
 const Simulation: React.FC = () => {
   const { dispatch } = useDispatchSimulationContext();
-  const { time } = useSimulationContext();
+  const { time, nodeSequence, activeNode } = useSimulationContext();
+
+  useEffect(() => {
+    dispatch({ type: 'setNodeSequence', payload: nodeSequenceResponse });
+  }, [dispatch]);
 
   return (
     <>
+      <div>{JSON.stringify(nodeSequence)}</div>
+      <div>{JSON.stringify(activeNode)}</div>
+
       <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
 
       <button onClick={() => dispatch({ type: 'incrementTime', payload: 10 })}>Set time</button>
