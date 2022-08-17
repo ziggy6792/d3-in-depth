@@ -113,8 +113,21 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         // .select('#graph-nodes')
         .selectAll('.node-rect')
         .data(nodes)
-        .join('svg')
-        .call(drag(simulation) as any);
+
+        .join((enter) => {
+          console.log('enter', enter.data);
+
+          const ret = enter.append('g');
+          return ret;
+        })
+        .attr('x', (d) => d.y)
+        .attr('y', (d) => d.x)
+        .attr('transform', (d) => {
+          console.log('transform d', JSON.stringify(d));
+          console.log('transform d', d);
+          return `translate(${d.x},${d.y})`;
+        });
+      // .call(drag(simulation) as any);
 
       simulation.on('tick', () => {
         link
@@ -147,12 +160,12 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         <g id='graph-nodes'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((link) => (
-          <svg className='node-rect'>
+          <g className='node-rect'>
             <rect width={50} height={50} fill='#fff'></rect>
             <text y='10' fill='red'>
               I love SVG!
             </text>
-          </svg>
+          </g>
         ))}
       </svg>
     </>
