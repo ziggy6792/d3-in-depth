@@ -1,7 +1,6 @@
 import React from 'react';
 import DragSliderAnimation from './stories/components/DragSliderAnimation/DragSliderAnimation';
-import { FundGraph as FundGraph } from './stories/components/FundGraph/FundGraph';
-import { GraphElements } from './stories/components/FundGraph/types';
+import { ForceGraph, GraphElements } from './stories/components/ForceGraph';
 
 const data = {
   nodes: [
@@ -25,7 +24,7 @@ const App: React.FC = () => {
       <DragSliderAnimation />
 
       <div className='App' style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
-        <FundGraph graphElements={data} />
+        <ForceGraph graphElements={data} />
       </div>
     </>
   );

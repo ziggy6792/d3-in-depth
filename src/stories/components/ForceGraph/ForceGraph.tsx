@@ -60,7 +60,7 @@ interface FundGraphGeneratorProps {
 const width = 200;
 const height = 120;
 
-export const FundGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements }) => {
+export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements }) => {
   console.log('graphElements', JSON.stringify(graphElements));
 
   const svgRef = useRef(null);
