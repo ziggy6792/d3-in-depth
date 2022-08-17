@@ -1,33 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
-// import { BaseType, Selection } from 'd3-selection';
-// import { scaleLinear } from 'd3-scale';
-// import { drag } from 'd3-drag';
-// import { interpolate } from 'd3-interpolate';
 import * as d3 from 'd3';
 import './DragSliderAnimation.css';
 import useInterval from 'src/hooks/useInterval';
 
 type Selection<T extends d3.BaseType = SVGSVGElement> = d3.Selection<T | null, unknown, null, undefined>;
 
-interface ISelections {
-  handle: Selection<SVGCircleElement>;
-  label: Selection<SVGTextElement>;
-  slider: Selection<SVGGElement>;
-}
-
 const margin = { right: 50, left: 50 };
 
-const maxTimeValue = 180;
-
 const DragSliderAnimation: React.FC = () => {
-  const svgRef = useRef<null | SVGSVGElement>(null);
+  // Maybe don't need this
   const [svg, setSvg] = useState<null | Selection>(null);
 
-  const [moving, setMoving] = useState(false);
-  const [timeValue, setTimeValue] = useState(0);
+  const svgRef = useRef<null | SVGSVGElement>(null);
+  const handleRef = useRef<null | SVGCircleElement>(null);
+  const labelRef = useRef<null | SVGTextElement>(null);
+  const sliderRef = useRef<null | SVGGElement>(null);
 
-  const [selections, setSelections] = useState<ISelections>(null);
+  const [moving, setMoving] = useState(false);
+  const [sliderValue, setSliderValue] = useState(0);
 
   // ToDo: move memos to hook
   const { width, height } = useMemo(() => {
@@ -37,20 +28,19 @@ const DragSliderAnimation: React.FC = () => {
     return { width: +svg.attr('width') - margin.left - margin.right, height: +svg.attr('height') };
   }, [svg]);
 
-  const x = useMemo(() => {
-    return d3.scaleLinear().domain([0, maxTimeValue]).range([0, width]).clamp(true);
+  const xScale = useMemo(() => {
+    return d3.scaleLinear().domain([0, 180]).range([0, width]).clamp(true);
   }, [svg]);
 
-  const updateAnimation = useCallback(
-    (newTimeValue: number) => {
+  const updateSlider = useCallback(
+    (newValue: number) => {
       if (!svg) return;
-      svg.style('background-color', d3.hsl(newTimeValue, 0.8, 0.8) as any);
-      if (!selections) return;
-      selections.handle.attr('cx', x(newTimeValue));
-      selections.label.attr('x', x(newTimeValue)).text(Math.floor(newTimeValue));
-      setTimeValue(newTimeValue);
+      svg.style('background-color', d3.hsl(newValue, 0.8, 0.8) as any);
+      d3.select(handleRef.current).attr('cx', xScale(newValue));
+      d3.select(labelRef.current).attr('x', xScale(newValue)).text(Math.floor(newValue));
+      setSliderValue(newValue);
     },
-    [svg, selections]
+    [svg]
   );
 
   // Draw initial d3
@@ -60,98 +50,64 @@ const DragSliderAnimation: React.FC = () => {
       return;
     }
 
-    const slider = svg
-      .selectAll('.slider')
-      .data([''])
-      .join('g')
-      .attr('class', 'slider')
-      .attr('transform', 'translate(' + margin.left + ',' + height / 2 + ')') as Selection<SVGGElement>;
-
-    slider
-      .selectAll('.track-lines')
-      .data(['track', 'track-inset', 'track-overlay'])
-      .join('line')
-      .attr('class', (d) => `track-lines ${d}`)
-      .attr('x1', x.range()[0])
-      .attr('x2', x.range()[1]);
+    const slider = svg.select('.slider').attr('transform', 'translate(' + margin.left + ',' + height / 2 + ')');
 
     slider
       .selectAll('.ticks')
-      .data([''])
-      .join('g')
-      .attr('class', 'ticks')
       .attr('transform', 'translate(0,' + 18 + ')')
       .selectAll('text')
-      .data(x.ticks(10))
+      .data(xScale.ticks(10))
       .join('text')
-      .attr('x', x)
+      .attr('x', xScale)
       .attr('text-anchor', 'middle')
       .text(function (d) {
         return d;
       });
 
-    const handle = slider.selectAll('.handle').data(['']).join('circle').attr('class', 'handle').attr('r', 9) as Selection<SVGCircleElement>;
+    const trackOverlay = svg.select('.track-overlay');
 
-    var label = slider
-      .selectAll('.label')
-      .data([''])
-      .join('text')
-      .attr('class', 'label')
-      .attr('text-anchor', 'middle')
-      .text('0')
-      .attr('transform', 'translate(0,' + -25 + ')') as Selection<SVGTextElement>;
-
-    setSelections({ handle, label, slider });
-  }, [svg]);
-
-  // Add drag handler
-  useEffect(() => {
-    if (!selections) return;
-
-    const { slider } = selections;
-
-    slider.call(
+    trackOverlay.call(
       d3.drag().on('drag', function (event) {
-        // const me = d3.select(this);
-        // ToDo: not sure why i need to substract the margin
-        updateAnimation(x.invert(event.x - margin.left));
+        updateSlider(xScale.invert(event.x));
         setMoving(false);
       })
     );
 
     // cool effect but remove for mow
-    // slider
-    //   .transition() // Gratuitous intro!
+    // d3.transition() // Gratuitous intro!
     //   .duration(750)
     //   .tween('hue', function () {
     //     var i = d3.interpolate(20, 0);
     //     return function (t) {
-    //       updateAnimation(i(t));
+    //       updateSlider(i(t));
     //     };
     //   });
-    updateAnimation(0);
-  }, [selections]);
+
+    updateSlider(0);
+  }, [svg]);
 
   useInterval(() => {
     if (moving) {
-      let currValInternal: number = timeValue;
-      let targetValue = +svg.attr('width') - margin.left - margin.right;
-
-      currValInternal = currValInternal + targetValue / 300;
-      if (currValInternal > maxTimeValue) {
+      let newSliderValue: number = sliderValue + xScale.domain()[1] / 100;
+      if (newSliderValue > xScale.domain()[1]) {
         setMoving(false);
-        currValInternal = 0;
-
-        console.log('Slider moving: ' + moving);
+        newSliderValue = 0;
       }
-      updateAnimation(currValInternal);
+      updateSlider(newSliderValue);
     }
   }, 100);
 
   return (
     <div>
       <svg ref={svgRef} width='960' height='500'>
-        {/* <g className='slider'></g> */}
+        <g ref={sliderRef} className='slider'>
+          {['track', 'track-inset', 'track-overlay'].map((className) => (
+            <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={className} />
+          ))}
+          <g className='ticks'></g>
+          <circle ref={handleRef} r={9} className='handle'></circle>
+          <text ref={labelRef} className='label' textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
+        </g>
       </svg>
       <button
         id='play-button'
