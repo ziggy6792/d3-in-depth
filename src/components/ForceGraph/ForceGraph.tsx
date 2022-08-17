@@ -1,15 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { D3DragEvent, SimulationLinkDatum } from 'd3';
-import { FundNodeInterface, GraphElements, GroupRootNodeInterface } from './types';
+import { NodeInterface, GraphElements } from './types';
 import { useSimulationContext } from 'src/components/Simulation/SimulaitionProvider';
 import { TSelection } from 'src/d3Types';
 
-type CardSVG = d3.Selection<SVGSVGElement, FundNodeInterface, d3.BaseType, unknown>;
+type CardSVG = d3.Selection<SVGSVGElement, NodeInterface, d3.BaseType, unknown>;
 
-type Simulation = d3.Simulation<FundNodeInterface, SimulationLinkDatum<FundNodeInterface>>;
+type Simulation = d3.Simulation<NodeInterface, SimulationLinkDatum<NodeInterface>>;
 
-type DragEvent = D3DragEvent<SVGCircleElement, FundNodeInterface, FundNodeInterface>;
+type DragEvent = D3DragEvent<SVGCircleElement, NodeInterface, NodeInterface>;
 
 const generateCard = (cardElement: CardSVG) => {
   const cardGroup = cardElement.append('g');
@@ -29,26 +29,17 @@ const generateCard = (cardElement: CardSVG) => {
 
   cardGroup
     .append('text')
-    .attr('font-weight', 'bold')
-    .attr('transform', 'translate(20, ' + initialOffset + ')')
-    .text((d) => (d.type === 'FUND' ? d!.fund!.name : (d as GroupRootNodeInterface)!.groupRootText));
+    .attr('transform', 'translate(20, ' + (textOffset * 0 + initialOffset) + ')')
+    .text((d) => (d.type === 'FUND' ? d?.details?.year || null : ''));
   cardGroup
     .append('text')
-    .attr('transform', 'translate(20, ' + (textOffset + initialOffset) + ')')
-    .text((d) => (d.type === 'FUND' ? d!.fund!.manager : (d as GroupRootNodeInterface)!.groupRootAttribute));
+    .attr('transform', 'translate(20, ' + (textOffset * 1 + initialOffset) + ')')
+    .text((d) => (d.type === 'FUND' ? d?.details?.type || null : ''));
   cardGroup
     .append('text')
     .attr('transform', 'translate(20, ' + (textOffset * 2 + initialOffset) + ')')
-    .text((d) => (d.type === 'FUND' ? d?.fund?.year || null : ''));
-  cardGroup
-    .append('text')
-    .attr('transform', 'translate(20, ' + (textOffset * 3 + initialOffset) + ')')
-    .text((d) => (d.type === 'FUND' ? d?.fund?.type || null : ''));
-  cardGroup
-    .append('text')
-    .attr('transform', 'translate(20, ' + (textOffset * 4 + initialOffset) + ')')
     .text((d) => {
-      if (d.type === 'FUND') return d?.fund?.isOpen ? 'Open' : 'Closed';
+      if (d.type === 'FUND') return d?.details?.isOpen ? 'Open' : 'Closed';
       return '';
     });
 
@@ -86,18 +77,18 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
           event.subject.fy = event.subject.y;
         }
 
-        function dragged(event: D3DragEvent<SVGCircleElement, FundNodeInterface, FundNodeInterface>) {
+        function dragged(event: D3DragEvent<SVGCircleElement, NodeInterface, NodeInterface>) {
           event.subject.fx = event.x;
           event.subject.fy = event.y;
         }
 
-        function dragEnded(event: D3DragEvent<SVGCircleElement, FundNodeInterface, FundNodeInterface>) {
+        function dragEnded(event: D3DragEvent<SVGCircleElement, NodeInterface, NodeInterface>) {
           if (!event.active) simulation.alphaTarget(0);
           event.subject.fx = null;
           event.subject.fy = null;
         }
 
-        return d3.drag<SVGCircleElement, FundNodeInterface>().on('start', dragStarted).on('drag', dragged).on('end', dragEnded);
+        return d3.drag<SVGCircleElement, NodeInterface>().on('start', dragStarted).on('drag', dragged).on('end', dragEnded);
       };
 
       const simulation = d3
@@ -159,11 +150,11 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
     updateGraph();
   }, [graphElements, svg]);
 
-  useEffect(() => {
-    if (!svg) return;
+  // useEffect(() => {
+  //   if (!svg) return;
 
-    const labels = svg.selectAll('.fund-label-card').attr('width', time);
-  }, [time, svg]);
+  //   const labels = svg.selectAll('.fund-label-card').attr('width', time);
+  // }, [time, svg]);
 
   return (
     <>

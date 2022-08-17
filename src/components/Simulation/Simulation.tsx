@@ -5,15 +5,15 @@ import { useDispatchSimulationContext, useSimulationContext } from './Simulaitio
 
 const data = {
   nodes: [
-    { id: '0', type: 'FUND', fund: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: false } },
-    { id: '1', type: 'FUND', fund: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: true } },
-    { id: '2', type: 'FUND', fund: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: true } },
-    { id: '0_ROOT', type: 'GROUP_ROOT', groupRootAttribute: 'manager', groupRootText: '' },
+    { id: '0', type: 'FUND', details: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: false } },
+    { id: '1', type: 'FUND', details: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: true } },
+    { id: '2', type: 'FUND', details: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: true } },
+    { id: '3', type: 'FUND', details: { name: 's', manager: '', year: '2022', type: 'Venture Capital', isOpen: true } },
   ],
   links: [
-    { source: '0_ROOT', target: '0' },
-    { source: '0_ROOT', target: '1' },
-    { source: '0_ROOT', target: '2' },
+    { source: '3', target: '0' },
+    { source: '3', target: '1' },
+    { source: '3', target: '2' },
     { source: '0', target: '2' },
     { source: '1', target: '2' },
   ],
