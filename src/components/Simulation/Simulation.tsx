@@ -24,7 +24,7 @@ const nodeSequenceResponse = { [10]: 1, [20]: 2, [50]: 1 };
 
 const Simulation: React.FC = () => {
   const { dispatch } = useDispatchSimulationContext();
-  const { time, nodeSequence, activeNode } = useSimulationContext();
+  const { time } = useSimulationContext();
 
   useEffect(() => {
     dispatch({ type: 'setNodeSequence', payload: nodeSequenceResponse });
@@ -32,12 +32,7 @@ const Simulation: React.FC = () => {
 
   return (
     <>
-      <div>{JSON.stringify(nodeSequence)}</div>
-      <div>{JSON.stringify(activeNode)}</div>
-
       <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
-
-      <button onClick={() => dispatch({ type: 'incrementTime', payload: 10 })}>Set time</button>
 
       <div className='App' style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
         <ForceGraph graphElements={data} />
