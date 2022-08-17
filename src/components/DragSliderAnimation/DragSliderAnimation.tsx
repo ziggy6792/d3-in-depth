@@ -39,7 +39,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
   const updateSlider = useCallback(
     (newValue: number) => {
       if (!svg) return;
-      svg.style('background-color', d3.hsl(newValue, 0.8, 0.8) as any);
+      // svg.style('background-color', d3.hsl(newValue, 0.8, 0.8) as any);
       d3.select(handleRef.current).attr('cx', xScale(newValue));
       d3.select(labelRef.current).attr('x', xScale(newValue)).text(Math.floor(newValue));
       onChange(newValue);
@@ -103,7 +103,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
 
   return (
     <div>
-      <svg ref={svgRef} width='960' height='500'>
+      <svg ref={svgRef} width='960' height='200'>
         <g ref={sliderRef} className='slider'>
           <g className='track-lines'>
             {['track', 'track-inset', 'track-overlay'].map((className) => (

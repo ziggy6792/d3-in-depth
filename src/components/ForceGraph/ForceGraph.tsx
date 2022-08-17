@@ -22,8 +22,8 @@ const generateCard = (cardElement: CardSVG) => {
     .append('rect')
     .classed('fund-label-card', true)
     .attr('fill', (d) => unselectedColor)
-    .attr('width', width)
-    .attr('height', height)
+    .attr('width', nodeWidth)
+    .attr('height', nodeHeight)
     .attr('rx', 20);
 
   // Card Contents
@@ -42,14 +42,16 @@ interface FundGraphGeneratorProps {
   graphElements: GraphElements;
 }
 
-const width = 60;
-const height = 60;
+const nodeWidth = 60;
+const nodeHeight = 60;
+
+const svgHeight = 800;
 
 export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements }) => {
   const svgRef = useRef(null);
   const [svg, setSvg] = useState<null | TSelection>(null);
 
-  const { time, activeNode } = useSimulationContext();
+  const { activeNode } = useSimulationContext();
 
   useEffect(() => {
     if (!svg) {
@@ -92,7 +94,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         )
         .force('charge', d3.forceManyBody().strength(-240))
         .force('collide', d3.forceCollide(150))
-        .force('center', d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2));
+        .force('center', d3.forceCenter(window.innerWidth / 2, svgHeight / 2));
 
       const link = svg
         .select('#graph-links')
@@ -107,24 +109,25 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         )
         .attr('stroke-width', (d: any) => Math.sqrt(d.value));
 
-      const node = svg
-        .select('#graph-nodes')
-        .selectAll('svg')
+      const node2 = svg
+        .selectAll('.node-rect')
         .data(nodes)
-        .join(
-          (enter) => {
-            const cardSVG = enter.append('svg').attr('width', width).attr('height', height);
-            generateCard(cardSVG);
-            return cardSVG;
-          },
-          (update) => {
-            // Redraw the card
-            update.html('');
-            generateCard(update as unknown as CardSVG);
-            return update;
-          },
-          (exit) => exit.remove()
-        )
+        .join('rect')
+        .attr('cx', (d) => {
+          console.log('node', d);
+          return d.x;
+        })
+        .attr('cy', (d) => {
+          console.log('node', d);
+          return d.y;
+        })
+        .call(drag(simulation) as any);
+
+      const node = svg
+        // .select('#graph-nodes')
+        .selectAll('.node-rect')
+        .data(nodes)
+        .join('rect')
         .call(drag(simulation) as any);
 
       simulation.on('tick', () => {
@@ -134,7 +137,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
           .attr('x2', (d: any) => d.target.x)
           .attr('y2', (d: any) => d.target.y);
 
-        node.attr('x', (d) => (d.x ? (d.x as number) - width / 2 : 0)).attr('y', (d) => (d.y ? (d.y as number) - height / 2 : 0));
+        node.attr('x', (d) => (d.x ? (d.x as number) - nodeWidth / 2 : 0)).attr('y', (d) => (d.y ? (d.y as number) - nodeHeight / 2 : 0));
       });
     };
     updateGraph();
@@ -153,10 +156,13 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
 
   return (
     <>
-      <svg ref={svgRef} width={'100%'} height={1000} id='graph-svg'>
+      <svg ref={svgRef} width={'100%'} height={svgHeight} id='graph-svg'>
         <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
         <g id='graph-nodes'></g>
         <g id='graph-labels'></g>
+        {graphElements.nodes.map((link) => (
+          <rect width={50} height={50} fill='#999' className='node-rect'></rect>
+        ))}
       </svg>
     </>
   );

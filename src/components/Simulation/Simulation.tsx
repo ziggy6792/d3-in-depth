@@ -32,9 +32,8 @@ const Simulation: React.FC = () => {
 
   return (
     <>
-      <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
-
       <div className='App' style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
+        <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
         <ForceGraph graphElements={data} />
       </div>
     </>
