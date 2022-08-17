@@ -64,9 +64,9 @@ const DragSliderAnimation: React.FC = () => {
         return d;
       });
 
-    const trackOverlay = svg.select('.track-overlay');
+    const trackLines = svg.select('.track-lines');
 
-    trackOverlay.call(
+    trackLines.call(
       d3.drag().on('drag', function (event) {
         updateSlider(xScale.invert(event.x));
         setMoving(false);
@@ -101,11 +101,13 @@ const DragSliderAnimation: React.FC = () => {
     <div>
       <svg ref={svgRef} width='960' height='500'>
         <g ref={sliderRef} className='slider'>
-          {['track', 'track-inset', 'track-overlay'].map((className) => (
-            <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={className} />
-          ))}
+          <g className='track-lines'>
+            {['track', 'track-inset', 'track-overlay'].map((className) => (
+              <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={className} />
+            ))}
+            <circle ref={handleRef} r={9} className='handle'></circle>
+          </g>
           <g className='ticks'></g>
-          <circle ref={handleRef} r={9} className='handle'></circle>
           <text ref={labelRef} className='label' textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
         </g>
       </svg>
