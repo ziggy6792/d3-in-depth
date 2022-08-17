@@ -113,7 +113,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         // .select('#graph-nodes')
         .selectAll('.node-rect')
         .data(nodes)
-        .join('rect')
+        .join('svg')
         .call(drag(simulation) as any);
 
       simulation.on('tick', () => {
@@ -147,7 +147,12 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         <g id='graph-nodes'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((link) => (
-          <rect width={50} height={50} fill='#999' className='node-rect'></rect>
+          <svg className='node-rect'>
+            <rect width={50} height={50} fill='#fff'></rect>
+            <text y='10' fill='red'>
+              I love SVG!
+            </text>
+          </svg>
         ))}
       </svg>
     </>
