@@ -18,6 +18,7 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
 
   switch (type) {
     case 'setTime': {
+      console.log('SET TIME!');
       return { ...state, time: action.payload };
     }
     default:

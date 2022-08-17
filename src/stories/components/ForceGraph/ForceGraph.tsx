@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { D3DragEvent, SimulationLinkDatum } from 'd3';
 import { FundNodeInterface, GraphElements, GroupRootNodeInterface } from './types';
+import { useSimulationContext } from 'src/stories/simulation/SimulaitionProvider';
 
 type CardSVG = d3.Selection<SVGSVGElement, FundNodeInterface, d3.BaseType, unknown>;
 
@@ -64,6 +65,8 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
   console.log('graphElements', JSON.stringify(graphElements));
 
   const svgRef = useRef(null);
+
+  const { time } = useSimulationContext();
 
   useEffect(() => {
     const updateGraph = async () => {
@@ -152,10 +155,13 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
   }, [graphElements]);
 
   return (
-    <svg ref={svgRef} width={'100%'} height={1000} id='graph-svg'>
-      <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
-      <g id='graph-nodes'></g>
-      <g id='graph-labels'></g>
-    </svg>
+    <>
+      {time}
+      <svg ref={svgRef} width={'100%'} height={1000} id='graph-svg'>
+        <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
+        <g id='graph-nodes'></g>
+        <g id='graph-labels'></g>
+      </svg>
+    </>
   );
 };
