@@ -1,7 +1,7 @@
 import React from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
 import { GraphElements, ForceGraph } from 'src/components/ForceGraph';
-import { useDispatchSimulationContext } from './SimulaitionProvider';
+import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 
 const data = {
   nodes: [
@@ -21,10 +21,11 @@ const data = {
 
 const Simulation: React.FC = () => {
   const { dispatch } = useDispatchSimulationContext();
+  const { time } = useSimulationContext();
 
   return (
     <>
-      <DragSliderAnimation />
+      <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
 
       <button onClick={() => dispatch({ type: 'incrementTime', payload: 10 })}>Set time</button>
 

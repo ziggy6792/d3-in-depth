@@ -7,7 +7,12 @@ import { TSelection } from 'src/d3Types';
 
 const margin = { right: 50, left: 50 };
 
-const DragSliderAnimation: React.FC = () => {
+interface IDragSliderProps {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) => {
   // Maybe don't need this
   const [svg, setSvg] = useState<null | TSelection>(null);
 
@@ -17,7 +22,7 @@ const DragSliderAnimation: React.FC = () => {
   const sliderRef = useRef<null | SVGGElement>(null);
 
   const [moving, setMoving] = useState(false);
-  const [sliderValue, setSliderValue] = useState(0);
+  // const [sliderValue, setSliderValue] = useState(0);
 
   // ToDo: move memos to hook
   const { width, height } = useMemo(() => {
@@ -37,7 +42,7 @@ const DragSliderAnimation: React.FC = () => {
       svg.style('background-color', d3.hsl(newValue, 0.8, 0.8) as any);
       d3.select(handleRef.current).attr('cx', xScale(newValue));
       d3.select(labelRef.current).attr('x', xScale(newValue)).text(Math.floor(newValue));
-      setSliderValue(newValue);
+      onChange(newValue);
     },
     [svg]
   );
@@ -87,7 +92,7 @@ const DragSliderAnimation: React.FC = () => {
 
   useInterval(() => {
     if (moving) {
-      let newSliderValue: number = sliderValue + xScale.domain()[1] / 100;
+      let newSliderValue: number = value + xScale.domain()[1] / 100;
       if (newSliderValue > xScale.domain()[1]) {
         setMoving(false);
         newSliderValue = 0;

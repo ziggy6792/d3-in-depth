@@ -162,7 +162,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
   useEffect(() => {
     if (!svg) return;
 
-    const labels = svg.select('.fund-label-card').attr('width', time);
+    const labels = svg.selectAll('.fund-label-card').attr('width', time);
   }, [time, svg]);
 
   return (
