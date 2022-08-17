@@ -109,20 +109,6 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         )
         .attr('stroke-width', (d: any) => Math.sqrt(d.value));
 
-      const node2 = svg
-        .selectAll('.node-rect')
-        .data(nodes)
-        .join('rect')
-        .attr('cx', (d) => {
-          console.log('node', d);
-          return d.x;
-        })
-        .attr('cy', (d) => {
-          console.log('node', d);
-          return d.y;
-        })
-        .call(drag(simulation) as any);
-
       const node = svg
         // .select('#graph-nodes')
         .selectAll('.node-rect')
