@@ -4,33 +4,30 @@ import { useTheme } from '@mui/material/styles';
 import _ from 'lodash';
 
 type SegmentRowProp = {
-  sequence: number;
+  index: number;
   playing: boolean;
 };
-
-const StyledSegmentRow = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'sequence' && prop !== 'playing',
-})<SegmentRowProp>(({ theme, sequence, playing }) => ({
-  display: 'grid',
-  borderRadius: theme.spacing(1),
-  background: sequence % 2 !== 0 ? theme.palette.common.darkCloudyBlue : undefined,
-  backgroundBlendMode: 'multiply',
-  marginTop: theme.spacing(1),
-  marginBottom: theme.spacing(0.5),
-  padding: theme.spacing(0.5),
-  border: playing ? '3px solid' : '',
-  borderColor: playing ? theme.palette.primary.main : '',
-  '&:hover': {
-    color: theme.palette.common.bhaBlue,
-    backgroundColor: alpha(theme.palette.primary.main, 0.5),
-  },
-}));
 
 const StyledBox = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.common.darkCloudyBlue,
   backgroundBlendMode: 'multiply',
   borderRadius: theme.spacing(1),
   zIndex: 0,
+}));
+
+const StyledSegmentRow = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'index' && prop !== 'playing',
+})<SegmentRowProp>(({ theme, index, playing }) => ({
+  backgroundColor: index % 2 === 0 ? theme.palette.common.darkCloudyBlue : undefined,
+  borderRadius: theme.spacing(1),
+  backgroundBlendMode: 'multiply',
+  zIndex: 0,
+  border: playing ? '3px solid' : '',
+  borderColor: playing ? theme.palette.primary.main : '',
+  '&:hover': {
+    color: theme.palette.common.bhaBlue,
+    backgroundColor: alpha(theme.palette.primary.main, 0.5),
+  },
 }));
 
 const defaultCurrentTime = null;
@@ -112,18 +109,24 @@ const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
 
         {timelineEvents.map((segment, index) => (
           <>
-            {index % 2 == 0 && (
-              <StyledBox gridColumn='1/ -1' gridRow={index + 2} marginX={1}>
-                <Box display='grid' gridTemplateColumns='repeat(2, 1fr)'>
-                  <Box gridColumn='1' padding={1} marginX={1}>
-                    hi
-                  </Box>
-                  <Box gridColumn='2' padding={1}>
-                    bye
-                  </Box>
+            <StyledSegmentRow
+              key={segment.segmentId}
+              gridColumn='1/ -1'
+              gridRow={index + 2}
+              marginX={1}
+              index={index}
+              playing={isPlayingSegment(segment, index)}
+              onClick={() => onSelectSegment(segment)}
+            >
+              <Box display='grid' gridTemplateColumns='repeat(2, 1fr)'>
+                <Box gridColumn='1' padding={1} marginX={1}>
+                  hi
                 </Box>
-              </StyledBox>
-            )}
+                <Box gridColumn='2' padding={1}>
+                  bye
+                </Box>
+              </Box>
+            </StyledSegmentRow>
           </>
         ))}
       </Box>
