@@ -96,6 +96,8 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         .force('collide', d3.forceCollide(150))
         .force('center', d3.forceCenter(window.innerWidth / 2, svgHeight / 2));
 
+      const nodeGroups = svg.selectAll('.node').data(nodes).call(drag(simulation));
+
       const linkLines = svg
         .select('#graph-links')
         .selectAll('.link')
@@ -104,16 +106,9 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         .attr('class', 'link')
         .attr('stroke', '#FFF')
         .attr('stroke-opacity', 0.6);
-      //
-      const nodeGroups = svg
-        .selectAll('.node-rect')
-        .data(nodes)
-        .join('g')
-        .attr('class', 'node')
-        .call(drag(simulation) as any);
 
       simulation.on('tick', () => {
-        nodeGroups.attr('transform', (d) => {
+        nodeGroups.attr('opacity', 1).attr('transform', (d) => {
           return `translate(${d.x - nodeWidth / 2},${d.y - nodeHeight / 2})`;
         });
 
@@ -145,7 +140,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         <g id='graph-nodes'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
-          <g className='node-rect'>
+          <g className='node' opacity={0}>
             <rect width={nodeWidth} height={nodeHeight} fill='#fff'></rect>
             <text y='10' fill='red'>
               {node.details.name}
