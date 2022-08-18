@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import * as d3 from 'd3';
-import './DragSliderAnimation.css';
 import useInterval from 'src/hooks/useInterval';
 import { TSelection } from 'src/d3Types';
 import { makeStyles } from 'src/makeStyles';
@@ -13,6 +12,7 @@ interface IDragSliderProps {
   value: number;
   onChange: (value: number) => void;
 }
+
 
 const useStyles = makeStyles()(() => ({
   label: {
@@ -30,6 +30,21 @@ const useStyles = makeStyles()(() => ({
     stroke: '#000',
     strokeOpacity: 0.5,
     strokeWidth: 1.25,
+  },
+  track: {
+    stroke: '#fff',
+    strokeOpacity: 0.3,
+    strokeWidth: 10,
+  },
+  trackInset: {
+    stroke: '#dcdcdc',
+    strokeWidth: 8,
+  },
+  trackOverlay: {
+    pointerEvents: 'stroke',
+    strokeWidth: 50, 
+    stroke: 'transparent',
+    cursor: 'crosshair',
   },
   slider: {},
   trackLines: {},
@@ -132,7 +147,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
       <svg ref={svgRef} width='960' height='200' opacity={0}>
         <g ref={sliderRef} className={classes.slider}>
           <g className={classes.trackLines}>
-            {['track', 'track-inset', 'track-overlay'].map((className) => (
+            {[classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
               <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
             ))}
             <circle ref={handleRef} r={9} className={classes.handle}></circle>
