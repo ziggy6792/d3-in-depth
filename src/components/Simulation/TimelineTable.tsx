@@ -22,6 +22,8 @@ const StyledSegmentRow = styled(Box, {
   borderRadius: theme.spacing(1),
   backgroundBlendMode: 'multiply',
   zIndex: 0,
+  marginLeft: theme.spacing(1),
+  marginRight: theme.spacing(1),
   border: playing ? '3px solid' : '',
   borderColor: playing ? theme.palette.primary.main : '',
   '&:hover': {
@@ -97,9 +99,17 @@ const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
     return isPlaying;
   };
 
+  const gridTemplateColumns = '1fr 2fr';
+
   return (
     <Box sx={{ width: 1 }}>
-      <Box display='grid' gridTemplateColumns='repeat(2, 1fr)' gridTemplateRows={`40px repeat(${timelineEvents.length}, 50px) auto`} columnGap={0.4} rowGap={1}>
+      <Box
+        display='grid'
+        gridTemplateColumns={gridTemplateColumns}
+        gridTemplateRows={`40px repeat(${timelineEvents.length}, 50px) auto`}
+        columnGap={0.4}
+        rowGap={1}
+      >
         <StyledBox gridColumn='1' gridRow='1/ -1' padding={1}>
           column 1
         </StyledBox>
@@ -113,13 +123,12 @@ const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
               key={segment.segmentId}
               gridColumn='1/ -1'
               gridRow={index + 2}
-              marginX={1}
               index={index}
               playing={isPlayingSegment(segment, index)}
               onClick={() => onSelectSegment(segment)}
             >
-              <Box display='grid' gridTemplateColumns='repeat(2, 1fr)'>
-                <Box gridColumn='1' padding={1} marginX={1}>
+              <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
+                <Box gridColumn='1' padding={1}>
                   hi
                 </Box>
                 <Box gridColumn='2' padding={1}>
