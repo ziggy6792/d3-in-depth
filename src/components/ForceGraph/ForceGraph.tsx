@@ -98,6 +98,8 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
 
       const nodeGroups = svg.selectAll('.node').data(nodes).call(drag(simulation));
 
+      const { width, height } = (nodeGroups.node() as HTMLElement).getBoundingClientRect();
+
       const linkLines = svg
         .select('#graph-links')
         .selectAll('.link')
@@ -109,7 +111,6 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
 
       simulation.on('tick', () => {
         nodeGroups.attr('opacity', 1).attr('transform', (d) => {
-          const { width, height } = (nodeGroups.node() as HTMLElement).getBoundingClientRect();
           return `translate(${d.x - width / 2},${d.y - height / 2})`;
         });
 
@@ -141,7 +142,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         <g id='graph-nodes'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
-          <g className='node' opacity={0}>
+          <g className='node' opacity={0} key={node.id}>
             <rect width={nodeWidth} height={nodeHeight} fill='#fff'></rect>
             <text y='10' fill='red'>
               {node.details.name}
