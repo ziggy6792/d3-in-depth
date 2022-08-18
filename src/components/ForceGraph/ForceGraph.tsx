@@ -130,17 +130,6 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
     updateGraph();
   }, [graphElements, svg]);
 
-  useEffect(() => {
-    if (!svg) return;
-    svg
-      .selectAll('.fund-label-card')
-      .data(graphElements.links)
-      .join('rect')
-      .transition()
-      .duration(500)
-      .attr('fill', (d, index) => (index === activeNode ? selectedColor : unselectedColor));
-  }, [activeNode, svg, graphElements]);
-
   return (
     <>
       <svg ref={svgRef} width={'100%'} height={svgHeight} id='graph-svg'>
@@ -149,13 +138,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
         {graphElements.nodes.map((node) => (
           <g className='node-container' opacity={0}>
             <g className='node' key={node.id}>
-              {renderNode(node)}
-              {/* <g>
-                <rect width={60} height={60} fill='#fff'></rect>
-                <text y='10' fill='red'>
-                  {node.details.name}
-                </text>
-              </g> */}
+              {renderNode(node)}   
             </g>
           </g>
         ))}

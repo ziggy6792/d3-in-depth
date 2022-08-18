@@ -2,12 +2,12 @@
 
 import _ from 'lodash';
 
-type NodeSequence = { [key: number]: number };
+type NodeSequence = { [key: number]: string };
 
 export interface ISumulationState {
   time: number;
   nodeSequence: NodeSequence;
-  activeNode: number | null;
+  activeNode: string | null;
 }
 
 export type IAction =

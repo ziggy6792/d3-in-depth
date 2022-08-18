@@ -21,7 +21,7 @@ const data = {
 } as GraphElements;
 
 // Fetched from api
-const nodeSequenceResponse = { [10]: 1, [20]: 2, [50]: 1 };
+const nodeSequenceResponse = { [10]: '1', [20]: '2', [50]: '1' };
 
 const Simulation: React.FC = () => {
   const { dispatch } = useDispatchSimulationContext();
