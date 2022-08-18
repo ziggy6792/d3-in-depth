@@ -13,7 +13,6 @@ interface IDragSliderProps {
   onChange: (value: number) => void;
 }
 
-
 const useStyles = makeStyles()(() => ({
   label: {
     fill: '#fff',

@@ -2,41 +2,13 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { D3DragEvent, SimulationLinkDatum } from 'd3';
 import { NodeInterface, GraphElements } from './types';
-import { useSimulationContext } from 'src/components/Simulation/SimulaitionProvider';
 import { TSelection } from 'src/d3Types';
-
-type CardSVG = d3.Selection<SVGSVGElement, NodeInterface, d3.BaseType, unknown>;
 
 type Simulation = d3.Simulation<NodeInterface, SimulationLinkDatum<NodeInterface>>;
 
 type DragEvent = D3DragEvent<SVGCircleElement, NodeInterface, NodeInterface>;
 
-const selectedColor = '#85054d';
-const unselectedColor = '#18295e';
 
-const generateCard = (cardElement: CardSVG) => {
-  const cardGroup = cardElement.append('g');
-
-  // Card Background
-  cardGroup
-    .append('rect')
-    .classed('fund-label-card', true)
-    .attr('fill', (d) => unselectedColor)
-    .attr('width', 60)
-    .attr('height', 60)
-    .attr('rx', 20);
-
-  // Card Contents
-  const textOffset = 20;
-  const initialOffset = 30;
-
-  cardGroup
-    .append('text')
-    .attr('transform', 'translate(25, ' + (textOffset * 0 + initialOffset) + ')')
-    .text((d) => d?.details?.name || null);
-
-  cardGroup.selectAll('text').style('fill', 'white');
-};
 
 interface FundGraphGeneratorProps {
   graphElements: GraphElements;
