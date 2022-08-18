@@ -93,9 +93,16 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         .force('collide', d3.forceCollide(150))
         .force('center', d3.forceCenter(window.innerWidth / 2, svgHeight / 2));
 
-      const nodeGroups = svg.selectAll('.node').data(nodes).call(drag(simulation));
+      const nodeGroups = svg.selectAll('.node').data(nodes).attr('opacity', 1).call(drag(simulation));
 
-      const { width: nodeWidth, height: nodeHeight } = (nodeGroups.node() as HTMLElement).getBoundingClientRect();
+      svg
+        .selectAll('.node-container')
+        .data(nodes)
+        .attr('transform', (d, index) => {
+          const { width: nodeWidth, height: nodeHeight } = (nodeGroups.nodes()[index] as HTMLElement).getBoundingClientRect();
+          console.log({ nodeWidth, nodeHeight });
+          return `translate(${-nodeWidth / 2},${-nodeHeight / 2})`;
+        });
 
       const linkLines = svg
         .select('#graph-links')
@@ -107,8 +114,8 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         .attr('stroke-opacity', 0.6);
 
       simulation.on('tick', () => {
-        nodeGroups.attr('opacity', 1).attr('transform', (d) => {
-          return `translate(${d.x - nodeWidth / 2},${d.y - nodeHeight / 2})`;
+        nodeGroups.attr('transform', (d) => {
+          return `translate(${d.x},${d.y})`;
         });
 
         linkLines
@@ -136,14 +143,15 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
     <>
       <svg ref={svgRef} width={'100%'} height={svgHeight} id='graph-svg'>
         <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
-        <g id='graph-nodes'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
-          <g className='node' opacity={0} key={node.id}>
-            <rect width={60} height={60} fill='#fff'></rect>
-            <text y='10' fill='red'>
-              {node.details.name}
-            </text>
+          <g className='node-container'>
+            <g className='node' opacity={0} key={node.id}>
+              <rect width={60} height={60} fill='#fff'></rect>
+              <text y='10' fill='red'>
+                {node.details.name}
+              </text>
+            </g>
           </g>
         ))}
       </svg>
