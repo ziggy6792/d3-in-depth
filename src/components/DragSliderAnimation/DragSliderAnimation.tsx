@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import './DragSliderAnimation.css';
 import useInterval from 'src/hooks/useInterval';
 import { TSelection } from 'src/d3Types';
+import { makeStyles } from 'src/makeStyles';
 
 const margin = { right: 50, left: 50 };
 
@@ -11,6 +12,12 @@ interface IDragSliderProps {
   value: number;
   onChange: (value: number) => void;
 }
+
+const useStyles = makeStyles()((theme) => ({
+  label: {
+    fill: '#fff',
+  },
+}));
 
 const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) => {
   // Maybe don't need this
@@ -22,6 +29,8 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
   const sliderRef = useRef<null | SVGGElement>(null);
 
   const [moving, setMoving] = useState(false);
+
+  const { classes } = useStyles();
   // const [sliderValue, setSliderValue] = useState(0);
 
   // ToDo: move memos to hook
@@ -114,7 +123,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
             <circle ref={handleRef} r={9} className='handle'></circle>
           </g>
           <g className='ticks'></g>
-          <text ref={labelRef} className='label' textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
+          <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
         </g>
       </svg>
       <button

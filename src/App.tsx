@@ -1,12 +1,27 @@
 import React from 'react';
 import { SimulationProvier } from './components/Simulation/SimulaitionProvider';
 import Simulation from './components/Simulation/Simulation';
+import createCache from '@emotion/cache';
+import { ThemeProvider } from '@mui/material/styles';
+import { CacheProvider } from '@emotion/react';
+import { createTheme } from '@mui/material';
+
+export const muiCache = createCache({
+  key: 'mui',
+  prepend: true,
+});
+
+const theme = createTheme({});
 
 const App: React.FC = () => {
   return (
-    <SimulationProvier>
-      <Simulation />
-    </SimulationProvier>
+    <CacheProvider value={muiCache}>
+      <ThemeProvider theme={theme}>
+        <SimulationProvier>
+          <Simulation />
+        </SimulationProvier>
+      </ThemeProvider>
+    </CacheProvider>
   );
 };
 
