@@ -96,48 +96,28 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         .force('collide', d3.forceCollide(150))
         .force('center', d3.forceCenter(window.innerWidth / 2, svgHeight / 2));
 
-      const link = svg
+      const linkLines = svg
         .select('#graph-links')
-        .attr('stroke', '#FFF')
-        .attr('stroke-opacity', 0.6)
-        .selectAll('line')
+        .selectAll('.link')
         .data(links)
-        .join(
-          (enter) => enter.append('line'),
-          (update) => update,
-          (exit) => exit.remove()
-        )
-        .attr('stroke-width', (d: any) => Math.sqrt(d.value));
-
-      const nodeG = svg
-        .selectAll('.node')
+        .join('line')
+        .attr('class', 'link')
+        .attr('stroke', '#FFF')
+        .attr('stroke-opacity', 0.6);
+      //
+      const nodeGroups = svg
+        .selectAll('.node-rect')
         .data(nodes)
         .join('g')
         .attr('class', 'node')
         .call(drag(simulation) as any);
 
       simulation.on('tick', () => {
-        // link
-        //   .attr('x1', (d: any) => d.source.x)
-        //   .attr('y1', (d: any) => d.source.y)
-        //   .attr('x2', (d: any) => d.target.x)
-        //   .attr('y2', (d: any) => d.target.y);
-
-        // node.attr('x', (d) => (d.x ? (d.x as number) - nodeWidth / 2 : 0)).attr('y', (d) => (d.y ? (d.y as number) - nodeHeight / 2 : 0));
-
-        nodeG.attr('transform', (d) => {
-          return `translate(${d.x},${d.y})`;
+        nodeGroups.attr('transform', (d) => {
+          return `translate(${d.x - nodeWidth / 2},${d.y - nodeHeight / 2})`;
         });
 
-        nodeG.selectAll('circle').data(['']).join('circle').attr('r', 10);
-
-        svg
-          .selectAll('.link')
-          .data(links)
-          .join('line')
-          .attr('class', 'link')
-          .attr('stroke', 'black')
-          .attr('fill', 'none')
+        linkLines
           .attr('x1', (d: any) => d.source.x)
           .attr('y1', (d: any) => d.source.y)
           .attr('x2', (d: any) => d.target.x)
@@ -164,11 +144,11 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
         <g id='graph-nodes'></g>
         <g id='graph-labels'></g>
-        {graphElements.nodes.map((link) => (
+        {graphElements.nodes.map((node) => (
           <g className='node-rect'>
-            <rect width={50} height={50} fill='#fff'></rect>
+            <rect width={nodeWidth} height={nodeHeight} fill='#fff'></rect>
             <text y='10' fill='red'>
-              I love SVG!
+              {node.details.name}
             </text>
           </g>
         ))}
