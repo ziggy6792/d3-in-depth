@@ -22,8 +22,8 @@ const generateCard = (cardElement: CardSVG) => {
     .append('rect')
     .classed('fund-label-card', true)
     .attr('fill', (d) => unselectedColor)
-    .attr('width', nodeWidth)
-    .attr('height', nodeHeight)
+    .attr('width', 60)
+    .attr('height', 60)
     .attr('rx', 20);
 
   // Card Contents
@@ -41,9 +41,6 @@ const generateCard = (cardElement: CardSVG) => {
 interface FundGraphGeneratorProps {
   graphElements: GraphElements;
 }
-
-const nodeWidth = 60;
-const nodeHeight = 60;
 
 const svgHeight = 800;
 
@@ -98,7 +95,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
 
       const nodeGroups = svg.selectAll('.node').data(nodes).call(drag(simulation));
 
-      const { width, height } = (nodeGroups.node() as HTMLElement).getBoundingClientRect();
+      const { width: nodeWidth, height: nodeHeight } = (nodeGroups.node() as HTMLElement).getBoundingClientRect();
 
       const linkLines = svg
         .select('#graph-links')
@@ -111,7 +108,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
 
       simulation.on('tick', () => {
         nodeGroups.attr('opacity', 1).attr('transform', (d) => {
-          return `translate(${d.x - width / 2},${d.y - height / 2})`;
+          return `translate(${d.x - nodeWidth / 2},${d.y - nodeHeight / 2})`;
         });
 
         linkLines
@@ -143,7 +140,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
           <g className='node' opacity={0} key={node.id}>
-            <rect width={nodeWidth} height={nodeHeight} fill='#fff'></rect>
+            <rect width={60} height={60} fill='#fff'></rect>
             <text y='10' fill='red'>
               {node.details.name}
             </text>
