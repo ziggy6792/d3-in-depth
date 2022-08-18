@@ -4,6 +4,7 @@ import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAn
 import { GraphElements, ForceGraph } from 'src/components/ForceGraph';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 import SimulationNode from './SimulationNode';
+import SimulationTimeline from './SimulationTimeline';
 
 const data = {
   nodes: [
@@ -41,8 +42,11 @@ const Simulation: React.FC = () => {
 
         <Grid item>
           <Grid container direction='row'>
-            <Grid item>
+            <Grid item xs={6}>
               <ForceGraph graphElements={data} renderNode={(node) => <SimulationNode node={node} />} />
+            </Grid>
+            <Grid item xs={6}>
+              <SimulationTimeline events={data.nodes} />
             </Grid>
           </Grid>
         </Grid>

@@ -4,14 +4,12 @@ import Simulation from './components/Simulation/Simulation';
 import createCache from '@emotion/cache';
 import { ThemeProvider } from '@mui/material/styles';
 import { CacheProvider } from '@emotion/react';
-import { createTheme } from '@mui/material';
+import theme from './theme';
 
 export const muiCache = createCache({
   key: 'mui',
   prepend: true,
 });
-
-const theme = createTheme({});
 
 const App: React.FC = () => {
   return (
