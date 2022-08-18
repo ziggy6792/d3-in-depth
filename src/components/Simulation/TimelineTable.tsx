@@ -1,4 +1,4 @@
-import { FC, memo, useState } from 'react';
+import { FC, memo, useMemo, useState } from 'react';
 import { alpha, Box, Grid, styled } from '@mui/material';
 
 import { NodeInterface } from 'src/components/ForceGraph';
@@ -39,6 +39,12 @@ interface ICallSegmentsProps {
   timelineEvents: NodeInterface[];
 }
 
+const columns = [
+  { name: 'Time', template: '1fr' },
+  { name: 'Name', template: '1fr' },
+  { name: 'Bla', template: '1fr' },
+];
+
 const TimelineTable: FC<ICallSegmentsProps> = (props) => {
   const { timelineEvents } = props;
   const [currentTime, setCurrentTime] = useState<number>(defaultCurrentTime);
@@ -68,7 +74,7 @@ interface ISegmentDetailProps {
 const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
   const { timelineEvents, currentPlayTime, onSelectEvent: onSelectSegment } = props;
 
-  const gridTemplateColumns = '1fr 2fr';
+  const gridTemplateColumns = useMemo(() => columns.map(({ template }) => template).join(' '), []);
 
   return (
     <Box sx={{ width: 1 }}>
@@ -79,33 +85,26 @@ const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
         columnGap={0.4}
         rowGap={1}
       >
-        <StyledBox gridColumn='1' gridRow='1/ -1' padding={1}>
-          Time
-        </StyledBox>
-        <StyledBox gridColumn='2' gridRow='1/ -1' padding={1}>
-          Name
-        </StyledBox>
+        {columns.map(({ name }, index) => (
+          <StyledBox gridColumn={index + 1} gridRow='1/ -1' padding={1}>
+            {name}
+          </StyledBox>
+        ))}
 
         {timelineEvents.map((timelineEvent, index) => (
-          <>
-            <StyledTimelineRow
-              key={timelineEvent.id}
-              gridColumn='1/ -1'
-              gridRow={index + 2}
-              index={index}
-              playing={false}
-              onClick={() => onSelectSegment(timelineEvent)}
-            >
-              <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
-                <Box gridColumn='1' padding={1}>
-                  {timelineEvent.details.name}
-                </Box>
-                <Box gridColumn='2' padding={1}>
-                  {timelineEvent.details.name}
-                </Box>
-              </Box>
-            </StyledTimelineRow>
-          </>
+          <StyledTimelineRow
+            key={timelineEvent.id}
+            gridColumn='1/ -1'
+            gridRow={index + 2}
+            index={index}
+            playing={false}
+            onClick={() => onSelectSegment(timelineEvent)}
+          >
+            <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
+              <Box padding={1}>{timelineEvent.details.name}</Box>
+              <Box padding={1}>{timelineEvent.details.name}</Box>
+            </Box>
+          </StyledTimelineRow>
         ))}
       </Box>
     </Box>
