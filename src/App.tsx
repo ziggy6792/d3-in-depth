@@ -1,23 +1,27 @@
 import React from 'react';
-import { data } from './data/data';
-import DragSliderAnimation from './stories/components/DragSliderAnimation/DragSliderAnimation';
-import Enter from './stories/components/Enter';
-import { ForceGraph } from './stories/components/ForceGraph/ForceGraph';
-import TimeNetwork from './stories/components/TimeNetwork';
-import TimeNetwork2 from './stories/components/TimeNetwork2';
-import Transition from './stories/components/Transition';
+import { SimulationProvier } from './components/Simulation/SimulaitionProvider';
+import Simulation from './components/Simulation/Simulation';
+import createCache from '@emotion/cache';
+import { ThemeProvider } from '@mui/material/styles';
+import { CacheProvider } from '@emotion/react';
+import { createTheme } from '@mui/material';
+
+export const muiCache = createCache({
+  key: 'mui',
+  prepend: true,
+});
+
+const theme = createTheme({});
 
 const App: React.FC = () => {
-  const nodeHoverTooltip = React.useCallback((node) => {
-    return `<div>     
-      <b>${node.name}</b>
-    </div>`;
-  }, []);
   return (
-    <h1>
-      <DragSliderAnimation />
-      {/* <ForceGraph linksData={data.links} nodesData={data.nodes} nodeHoverTooltip={nodeHoverTooltip} /> */}
-    </h1>
+    <CacheProvider value={muiCache}>
+      <ThemeProvider theme={theme}>
+        <SimulationProvier>
+          <Simulation />
+        </SimulationProvier>
+      </ThemeProvider>
+    </CacheProvider>
   );
 };
 
