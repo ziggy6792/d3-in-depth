@@ -112,13 +112,18 @@ const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
 
         {timelineEvents.map((segment, index) => (
           <>
-            <>{index % 2 == 0 && <StyledBox gridColumn='1/ -1' gridRow={index + 2} marginX={1}></StyledBox>}</>
-            <Box gridColumn='1' gridRow={index + 2} padding={1} marginX={1} zIndex={1}>
-              hi
-            </Box>
-            <Box gridColumn='2' gridRow={index + 2} padding={1} zIndex={1}>
-              bye
-            </Box>
+            {index % 2 == 0 && (
+              <StyledBox gridColumn='1/ -1' gridRow={index + 2} marginX={1}>
+                <Box display='grid' gridTemplateColumns='repeat(2, 1fr)'>
+                  <Box gridColumn='1' padding={1} marginX={1}>
+                    hi
+                  </Box>
+                  <Box gridColumn='2' padding={1}>
+                    bye
+                  </Box>
+                </Box>
+              </StyledBox>
+            )}
           </>
         ))}
       </Box>
