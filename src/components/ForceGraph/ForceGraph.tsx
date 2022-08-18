@@ -109,7 +109,8 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
 
       simulation.on('tick', () => {
         nodeGroups.attr('opacity', 1).attr('transform', (d) => {
-          return `translate(${d.x - nodeWidth / 2},${d.y - nodeHeight / 2})`;
+          const { width, height } = (nodeGroups.node() as HTMLElement).getBoundingClientRect();
+          return `translate(${d.x - width / 2},${d.y - height / 2})`;
         });
 
         linkLines
