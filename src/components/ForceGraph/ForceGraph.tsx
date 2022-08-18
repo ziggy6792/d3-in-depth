@@ -109,34 +109,39 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         )
         .attr('stroke-width', (d: any) => Math.sqrt(d.value));
 
-      const node = svg
-        // .select('#graph-nodes')
-        .selectAll('.node-rect')
+      const nodeG = svg
+        .selectAll('.node')
         .data(nodes)
-
-        .join((enter) => {
-          console.log('enter', enter.data);
-
-          const ret = enter.append('g');
-          return ret;
-        })
-        .attr('x', (d) => d.y)
-        .attr('y', (d) => d.x)
-        .attr('transform', (d) => {
-          console.log('transform d', JSON.stringify(d));
-          console.log('transform d', d);
-          return `translate(${d.x},${d.y})`;
-        });
-      // .call(drag(simulation) as any);
+        .join('g')
+        .attr('class', 'node')
+        .call(drag(simulation) as any);
 
       simulation.on('tick', () => {
-        link
+        // link
+        //   .attr('x1', (d: any) => d.source.x)
+        //   .attr('y1', (d: any) => d.source.y)
+        //   .attr('x2', (d: any) => d.target.x)
+        //   .attr('y2', (d: any) => d.target.y);
+
+        // node.attr('x', (d) => (d.x ? (d.x as number) - nodeWidth / 2 : 0)).attr('y', (d) => (d.y ? (d.y as number) - nodeHeight / 2 : 0));
+
+        nodeG.attr('transform', (d) => {
+          return `translate(${d.x},${d.y})`;
+        });
+
+        nodeG.selectAll('circle').data(['']).join('circle').attr('r', 10);
+
+        svg
+          .selectAll('.link')
+          .data(links)
+          .join('line')
+          .attr('class', 'link')
+          .attr('stroke', 'black')
+          .attr('fill', 'none')
           .attr('x1', (d: any) => d.source.x)
           .attr('y1', (d: any) => d.source.y)
           .attr('x2', (d: any) => d.target.x)
           .attr('y2', (d: any) => d.target.y);
-
-        node.attr('x', (d) => (d.x ? (d.x as number) - nodeWidth / 2 : 0)).attr('y', (d) => (d.y ? (d.y as number) - nodeHeight / 2 : 0));
       });
     };
     updateGraph();
