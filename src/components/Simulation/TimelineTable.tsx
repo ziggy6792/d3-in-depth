@@ -38,18 +38,21 @@ const StyledRow = styled(Box, {
 const defaultCurrentTime = null;
 const defaultSelectedTime = null;
 
-interface ICallSegmentsProps {
+// ToDo pass as props
+const columns = [
+  { name: 'Time', template: '1fr' },
+  { name: 'Name', template: '2fr' },
+];
+
+interface ITimelineBaseProps {
+  rowHeight?: string;
+}
+
+interface ITimelineProps extends ITimelineBaseProps {
   timelineEvents: NodeInterface[];
 }
 
-const columns = [
-  { name: 'Time', template: '1fr' },
-  { name: 'Name', template: '1fr' },
-  { name: 'Bla', template: '1fr' },
-];
-
-const TimelineTable: FC<ICallSegmentsProps> = (props) => {
-  const { timelineEvents } = props;
+const TimelineTable: FC<ITimelineProps> = ({ timelineEvents, rowHeight = '1fr' }) => {
   const [currentTime, setCurrentTime] = useState<number>(defaultCurrentTime);
   const [selectedTime, setSelectedTime] = useState<number>(defaultSelectedTime);
 
@@ -59,6 +62,7 @@ const TimelineTable: FC<ICallSegmentsProps> = (props) => {
         <TimelineTableRows
           timelineEvents={timelineEvents}
           currentPlayTime={currentTime}
+          rowHeight={rowHeight}
           onSelectEvent={(event) => {
             //
           }}
@@ -68,15 +72,13 @@ const TimelineTable: FC<ICallSegmentsProps> = (props) => {
   );
 };
 
-interface ISegmentDetailProps {
+interface ISegmentDetailProps extends ITimelineBaseProps {
   timelineEvents: NodeInterface[];
   currentPlayTime: number;
   onSelectEvent: (event: NodeInterface) => void;
 }
 
-const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
-  const { timelineEvents, currentPlayTime, onSelectEvent: onSelectSegment } = props;
-
+const TimelineTableRows: FC<ISegmentDetailProps> = ({ timelineEvents, currentPlayTime, onSelectEvent: onSelectSegment, rowHeight }) => {
   const gridTemplateColumns = useMemo(() => columns.map(({ template }) => template).join(' '), []);
 
   return (
@@ -84,10 +86,11 @@ const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
       <Box
         display='grid'
         gridTemplateColumns={gridTemplateColumns}
-        gridTemplateRows={`40px repeat(${timelineEvents.length}, 80px) auto`}
+        gridTemplateRows={`1fr repeat(${timelineEvents.length}, ${rowHeight}) auto`}
         columnGap={0.4}
         rowGap={1}
       >
+        {/* Column highlights */}
         {columns.map(({ name }, index) => (
           <StyledColumn key={name} gridColumn={index + 1} gridRow='1/ -1' padding={1}></StyledColumn>
         ))}
