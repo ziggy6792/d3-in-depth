@@ -49,8 +49,6 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
   const svgRef = useRef(null);
   const [svg, setSvg] = useState<null | TSelection>(null);
 
-  const { activeNode } = useSimulationContext();
-
   useEffect(() => {
     if (!svg) {
       setSvg(d3.select(svgRef.current));
@@ -96,13 +94,13 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
 
       const nodeGroups = svg.selectAll('.node').data(nodes).call(drag(simulation));
 
+      // Center nodes
       svg
         .selectAll('.node-container')
         .attr('opacity', 1)
         .data(nodes)
         .attr('transform', (d, index) => {
           const { width: nodeWidth, height: nodeHeight } = (nodeGroups.nodes()[index] as HTMLElement).getBoundingClientRect();
-          console.log({ nodeWidth, nodeHeight });
           return `translate(${-nodeWidth / 2},${-nodeHeight / 2})`;
         });
 
@@ -136,10 +134,8 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
         <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
-          <g className='node-container' opacity={0}>
-            <g className='node' key={node.id}>
-              {renderNode(node)}   
-            </g>
+          <g className='node-container' key={node.id} opacity={0}>
+            <g className='node'>{renderNode(node)}</g>
           </g>
         ))}
       </svg>
