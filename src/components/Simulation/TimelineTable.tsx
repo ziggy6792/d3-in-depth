@@ -1,6 +1,7 @@
 import { FC, memo, useEffect, useState } from 'react';
 import { alpha, Box, Chip, Grid, styled, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import _ from 'lodash';
 
 type SegmentRowProp = {
   sequence: number;
@@ -101,49 +102,25 @@ const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
 
   return (
     <Box sx={{ width: 1 }}>
-      <Box display='grid' gridTemplateColumns='repeat(2, 1fr)' gridTemplateRows='repeat(10, 1fr)' columnGap={0.5} rowGap={2}>
-        <Box gridColumn='1 ' gridRow='1' zIndex={1} columnGap={1} rowGap={1}>
-          {/* <Box display='grid' gridTemplateColumns='repeat(160, 1fr)' columnGap={0.2}>
-            <Box gridColumn='1'>
-              <Typography variant='subtitle2'>Time</Typography>
-            </Box>
-            <Box gridColumn='2'>
-              <Typography variant='subtitle2'>Event</Typography>
-            </Box>
-          </Box> */}
-
-          {/* {timelineEvents.map((segment, index) => (
-              <StyledSegmentRow
-                key={segment.segmentId}
-                gridTemplateColumns='repeat(160, 1fr)'
-                columnGap={0.2}
-                alignItems='center'
-                sequence={segment.dialogSequence}
-                playing={isPlayingSegment(segment, index)}
-                onClick={() => onSelectSegment(segment)}
-              >
-                <Box gridColumn='1 / span 80'>
-                  <Typography variant='body1'>{segment.timecode}</Typography>
-                </Box>
-
-                <Box gridColumn='80 / span 80'>transcript</Box>
-              </StyledSegmentRow>
-            ))} */}
-        </Box>
+      <Box display='grid' gridTemplateColumns='repeat(2, 1fr)' gridTemplateRows={`40px repeat(${timelineEvents.length}, 50px) auto`} columnGap={0.4} rowGap={1}>
         <StyledBox gridColumn='1' gridRow='1/ -1' padding={1}>
-          hi
+          column 1
         </StyledBox>
         <StyledBox gridColumn='2' gridRow='1/ -1' padding={1}>
-          bye
+          column 2
         </StyledBox>
-        <StyledBox gridColumn='1/ -1' gridRow='2' padding={1}></StyledBox>
 
-        <Box gridColumn='1' gridRow='2' padding={1} zIndex={1}>
-          hi
-        </Box>
-        <Box gridColumn='2' gridRow='2' padding={1} zIndex={1}>
-          bye
-        </Box>
+        {timelineEvents.map((segment, index) => (
+          <>
+            <>{index % 2 == 0 && <StyledBox gridColumn='1/ -1' gridRow={index + 2} marginX={1}></StyledBox>}</>
+            <Box gridColumn='1' gridRow={index + 2} padding={1} marginX={1} zIndex={1}>
+              hi
+            </Box>
+            <Box gridColumn='2' gridRow={index + 2} padding={1} zIndex={1}>
+              bye
+            </Box>
+          </>
+        ))}
       </Box>
     </Box>
   );
