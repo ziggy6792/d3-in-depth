@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import useInterval from 'src/hooks/useInterval';
 import { TSelection } from 'src/d3Types';
 import { makeStyles } from 'src/makeStyles';
-import { Button } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 
 const margin = { right: 50, left: 50 };
 
@@ -41,9 +41,12 @@ const useStyles = makeStyles()(() => ({
   },
   trackOverlay: {
     pointerEvents: 'stroke',
-    strokeWidth: 50, 
+    strokeWidth: 50,
     stroke: 'transparent',
     cursor: 'crosshair',
+  },
+  playButton: {
+    width: 80,
   },
   slider: {},
   trackLines: {},
@@ -142,28 +145,33 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
   }, 100);
 
   return (
-    <div>
-      <svg ref={svgRef} width='960' height='200' opacity={0}>
-        <g ref={sliderRef} className={classes.slider}>
-          <g className={classes.trackLines}>
-            {[classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
-              <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
-            ))}
-            <circle ref={handleRef} r={9} className={classes.handle}></circle>
+    <Grid container direction='row' alignContent='stretch' alignItems='center' style={{ padding: 20 }}>
+      <Grid item>
+        <Button
+          variant='contained'
+          className={classes.playButton}
+          onClick={() => {
+            setMoving((prevValue) => !prevValue);
+          }}
+        >
+          {moving ? 'Pause' : 'Play'}
+        </Button>
+      </Grid>
+      <Grid item>
+        <svg ref={svgRef} width='960' height='200' opacity={0}>
+          <g ref={sliderRef} className={classes.slider}>
+            <g className={classes.trackLines}>
+              {[classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
+                <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
+              ))}
+              <circle ref={handleRef} r={9} className={classes.handle}></circle>
+            </g>
+            <g className={classes.ticks}></g>
+            <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
           </g>
-          <g className={classes.ticks}></g>
-          <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
-        </g>
-      </svg>
-      <Button
-        variant='contained'
-        onClick={() => {
-          setMoving((prevValue) => !prevValue);
-        }}
-      >
-        {moving ? 'Pause' : 'Play'}
-      </Button>
-    </div>
+        </svg>
+      </Grid>
+    </Grid>
   );
 };
 
