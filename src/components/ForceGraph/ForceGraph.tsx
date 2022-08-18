@@ -40,11 +40,12 @@ const generateCard = (cardElement: CardSVG) => {
 
 interface FundGraphGeneratorProps {
   graphElements: GraphElements;
+  renderNode: (node: NodeInterface) => React.ReactNode;
 }
 
 const svgHeight = 800;
 
-export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements }) => {
+export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, renderNode }) => {
   const svgRef = useRef(null);
   const [svg, setSvg] = useState<null | TSelection>(null);
 
@@ -148,10 +149,13 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         {graphElements.nodes.map((node) => (
           <g className='node-container' opacity={0}>
             <g className='node' key={node.id}>
-              <rect width={60} height={60} fill='#fff'></rect>
-              <text y='10' fill='red'>
-                {node.details.name}
-              </text>
+              {renderNode(node)}
+              {/* <g>
+                <rect width={60} height={60} fill='#fff'></rect>
+                <text y='10' fill='red'>
+                  {node.details.name}
+                </text>
+              </g> */}
             </g>
           </g>
         ))}

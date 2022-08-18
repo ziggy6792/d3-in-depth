@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
 import { GraphElements, ForceGraph } from 'src/components/ForceGraph';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
+import SimulationNode from './SimulationNode';
 
 const data = {
   nodes: [
@@ -34,7 +35,7 @@ const Simulation: React.FC = () => {
     <>
       <div className='App' style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
         <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
-        <ForceGraph graphElements={data} />
+        <ForceGraph graphElements={data} renderNode={(node) => <SimulationNode node={node} />} />
       </div>
     </>
   );
