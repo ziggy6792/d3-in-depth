@@ -5,6 +5,7 @@ import './DragSliderAnimation.css';
 import useInterval from 'src/hooks/useInterval';
 import { TSelection } from 'src/d3Types';
 import { makeStyles } from 'src/makeStyles';
+import { Button } from '@mui/material';
 
 const margin = { right: 50, left: 50 };
 
@@ -13,10 +14,25 @@ interface IDragSliderProps {
   onChange: (value: number) => void;
 }
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles()(() => ({
   label: {
     fill: '#fff',
   },
+  ticks: {
+    fill: '#fff',
+    fontSize: 10,
+  },
+  trackLine: {
+    strokeLinecap: 'round',
+  },
+  handle: {
+    fill: '#fff',
+    stroke: '#000',
+    strokeOpacity: 0.5,
+    strokeWidth: 1.25,
+  },
+  slider: {},
+  trackLines: {},
 }));
 
 const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) => {
@@ -30,8 +46,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
 
   const [moving, setMoving] = useState(false);
 
-  const { classes } = useStyles();
-  // const [sliderValue, setSliderValue] = useState(0);
+  const { classes, cx } = useStyles();
 
   // ToDo: move memos to hook
   const { width, height } = useMemo(() => {
@@ -63,10 +78,10 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
       return;
     }
 
-    const slider = svg.select('.slider').attr('transform', 'translate(' + margin.left + ',' + height / 2 + ')');
+    const slider = svg.select(`.${classes.slider}`).attr('transform', 'translate(' + margin.left + ',' + height / 2 + ')');
 
     slider
-      .selectAll('.ticks')
+      .selectAll(`.${classes.ticks}`)
       .attr('transform', 'translate(0,' + 18 + ')')
       .selectAll('text')
       .data(xScale.ticks(10))
@@ -77,7 +92,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
         return d;
       });
 
-    const trackLines = svg.select('.track-lines');
+    const trackLines = svg.select(`.${classes.trackLines}`);
 
     trackLines.call(
       d3.drag().on('drag', function (event) {
@@ -115,25 +130,25 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
   return (
     <div>
       <svg ref={svgRef} width='960' height='200' opacity={0}>
-        <g ref={sliderRef} className='slider'>
-          <g className='track-lines'>
+        <g ref={sliderRef} className={classes.slider}>
+          <g className={classes.trackLines}>
             {['track', 'track-inset', 'track-overlay'].map((className) => (
-              <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={className} />
+              <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
             ))}
-            <circle ref={handleRef} r={9} className='handle'></circle>
+            <circle ref={handleRef} r={9} className={classes.handle}></circle>
           </g>
-          <g className='ticks'></g>
+          <g className={classes.ticks}></g>
           <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
         </g>
       </svg>
-      <button
-        id='play-button'
+      <Button
+        variant='contained'
         onClick={() => {
           setMoving((prevValue) => !prevValue);
         }}
       >
         {moving ? 'Pause' : 'Play'}
-      </button>
+      </Button>
     </div>
   );
 };
