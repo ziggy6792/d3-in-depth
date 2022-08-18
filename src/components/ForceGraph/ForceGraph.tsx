@@ -93,10 +93,11 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         .force('collide', d3.forceCollide(150))
         .force('center', d3.forceCenter(window.innerWidth / 2, svgHeight / 2));
 
-      const nodeGroups = svg.selectAll('.node').data(nodes).attr('opacity', 1).call(drag(simulation));
+      const nodeGroups = svg.selectAll('.node').data(nodes).call(drag(simulation));
 
       svg
         .selectAll('.node-container')
+        .attr('opacity', 1)
         .data(nodes)
         .attr('transform', (d, index) => {
           const { width: nodeWidth, height: nodeHeight } = (nodeGroups.nodes()[index] as HTMLElement).getBoundingClientRect();
@@ -145,8 +146,8 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements })
         <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
-          <g className='node-container'>
-            <g className='node' opacity={0} key={node.id}>
+          <g className='node-container' opacity={0}>
+            <g className='node' key={node.id}>
               <rect width={60} height={60} fill='#fff'></rect>
               <text y='10' fill='red'>
                 {node.details.name}
