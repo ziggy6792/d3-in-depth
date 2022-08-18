@@ -32,8 +32,8 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
 
   return (
     <g ref={svgRef}>
-      <rect width={60} height={60}></rect>
-      <text y='10' fill='red'>
+      <rect width={60} height={60} rx={20}></rect>
+      <text fill='white' x={30} y={30} textAnchor='middle' dominantBaseline='middle' fontSize='2em'>
         {node.details.name}
         {node.index}
       </text>
