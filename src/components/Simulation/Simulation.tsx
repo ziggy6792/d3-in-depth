@@ -1,3 +1,4 @@
+import { Button, Grid } from '@mui/material';
 import React, { useEffect } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
 import { GraphElements, ForceGraph } from 'src/components/ForceGraph';
@@ -33,10 +34,19 @@ const Simulation: React.FC = () => {
 
   return (
     <>
-      <div style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
-        <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
-        <ForceGraph graphElements={data} renderNode={(node) => <SimulationNode node={node} />} />
-      </div>
+      <Grid direction='column' container style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
+        <Grid item>
+          <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
+        </Grid>
+
+        <Grid item>
+          <Grid container direction='row'>
+            <Grid item>
+              <ForceGraph graphElements={data} renderNode={(node) => <SimulationNode node={node} />} />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     </>
   );
 };

@@ -8,14 +8,14 @@ type Simulation = d3.Simulation<NodeInterface, SimulationLinkDatum<NodeInterface
 
 type DragEvent = D3DragEvent<SVGCircleElement, NodeInterface, NodeInterface>;
 
-
-
 interface FundGraphGeneratorProps {
   graphElements: GraphElements;
   renderNode: (node: NodeInterface) => React.ReactNode;
 }
 
+// ToDo: Make responsive
 const svgHeight = 800;
+const svgWidth = 800;
 
 export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, renderNode }) => {
   const svgRef = useRef(null);
@@ -62,7 +62,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
         )
         .force('charge', d3.forceManyBody().strength(-240))
         .force('collide', d3.forceCollide(150))
-        .force('center', d3.forceCenter(window.innerWidth / 2, svgHeight / 2));
+        .force('center', d3.forceCenter(svgWidth / 2, svgHeight / 2));
 
       const nodeGroups = svg.selectAll('.node').data(nodes).call(drag(simulation));
 
@@ -102,7 +102,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
 
   return (
     <>
-      <svg ref={svgRef} width={'100%'} height={svgHeight} id='graph-svg'>
+      <svg ref={svgRef} width={svgWidth} height={svgHeight} id='graph-svg'>
         <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
