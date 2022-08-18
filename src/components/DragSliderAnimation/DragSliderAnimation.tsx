@@ -87,6 +87,8 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
     //     };
     //   });
 
+    svg.attr('opacity', 1);
+
     updateSlider(0);
   }, [svg]);
 
@@ -103,7 +105,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
 
   return (
     <div>
-      <svg ref={svgRef} width='960' height='200'>
+      <svg ref={svgRef} width='960' height='200' opacity={0}>
         <g ref={sliderRef} className='slider'>
           <g className='track-lines'>
             {['track', 'track-inset', 'track-overlay'].map((className) => (
