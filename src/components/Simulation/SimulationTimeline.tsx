@@ -6,21 +6,10 @@ interface ISimulationTimelineProps {
   events: NodeInterface[];
 }
 
-const bla = {
-  conversationId: 'conversationId',
-  segmentId: 'segmentId',
-  timecode: 'timecode',
-  timecodeInSeconds: 20,
-  iconSource: 'iconSource',
-  transcript: 'transcript',
-  dialogSequence: 1,
-  notes: 'notes',
-};
-
-const SimulationTimeline: React.FC<ISimulationTimelineProps> = (props) => {
+const SimulationTimeline: React.FC<ISimulationTimelineProps> = ({ events }) => {
   return (
     <Container>
-      <TimelineTable timelineEvents={[bla, bla, bla]} />
+      <TimelineTable timelineEvents={events} />
     </Container>
   );
 };

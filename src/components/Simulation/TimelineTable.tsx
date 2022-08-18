@@ -1,7 +1,7 @@
-import { FC, memo, useEffect, useState } from 'react';
-import { alpha, Box, Chip, Grid, styled, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import _ from 'lodash';
+import { FC, memo, useState } from 'react';
+import { alpha, Box, Grid, styled } from '@mui/material';
+
+import { NodeInterface } from 'src/components/ForceGraph';
 
 type SegmentRowProp = {
   index: number;
@@ -15,7 +15,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   zIndex: 0,
 }));
 
-const StyledSegmentRow = styled(Box, {
+const StyledTimelineRow = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'index' && prop !== 'playing',
 })<SegmentRowProp>(({ theme, index, playing }) => ({
   backgroundColor: index % 2 === 0 ? theme.palette.common.darkCloudyBlue : undefined,
@@ -36,7 +36,7 @@ const defaultCurrentTime = null;
 const defaultSelectedTime = null;
 
 interface ICallSegmentsProps {
-  timelineEvents: ITimelineEvent[];
+  timelineEvents: NodeInterface[];
 }
 
 const TimelineTable: FC<ICallSegmentsProps> = (props) => {
@@ -50,8 +50,8 @@ const TimelineTable: FC<ICallSegmentsProps> = (props) => {
         <TimelineTableRows
           timelineEvents={timelineEvents}
           currentPlayTime={currentTime}
-          onSelectSegment={(segment) => {
-            setSelectedTime(segment.timecodeInSeconds);
+          onSelectEvent={(event) => {
+            //
           }}
         />
       </Grid>
@@ -59,45 +59,14 @@ const TimelineTable: FC<ICallSegmentsProps> = (props) => {
   );
 };
 
-export interface ITimelineEvent {
-  conversationId: string;
-  segmentId: string;
-  timecode: string;
-  timecodeInSeconds: number;
-  iconSource: string;
-  transcript: string;
-  dialogSequence: number;
-  notes: string;
-}
-
 interface ISegmentDetailProps {
-  timelineEvents: ITimelineEvent[];
+  timelineEvents: NodeInterface[];
   currentPlayTime: number;
-  onSelectSegment: (segment: ITimelineEvent) => void;
+  onSelectEvent: (event: NodeInterface) => void;
 }
 
 const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
-  const { timelineEvents, currentPlayTime, onSelectSegment } = props;
-  const isPlayingSegment = (currentSegment: ITimelineEvent, currentIndex: number): boolean => {
-    if (!currentPlayTime) {
-      return false;
-    }
-
-    let nextSegment = null;
-    let isPlaying = false;
-
-    // Not last segment
-    if (currentIndex + 1 < timelineEvents.length) {
-      nextSegment = timelineEvents[currentIndex + 1];
-      isPlaying = currentPlayTime >= currentSegment.timecodeInSeconds && currentPlayTime < nextSegment.timecodeInSeconds;
-    }
-    // Last segment
-    else {
-      isPlaying = currentPlayTime >= currentSegment.timecodeInSeconds;
-    }
-
-    return isPlaying;
-  };
+  const { timelineEvents, currentPlayTime, onSelectEvent: onSelectSegment } = props;
 
   const gridTemplateColumns = '1fr 2fr';
 
@@ -111,31 +80,31 @@ const TimelineTableRows: FC<ISegmentDetailProps> = (props) => {
         rowGap={1}
       >
         <StyledBox gridColumn='1' gridRow='1/ -1' padding={1}>
-          column 1
+          Time
         </StyledBox>
         <StyledBox gridColumn='2' gridRow='1/ -1' padding={1}>
-          column 2
+          Name
         </StyledBox>
 
-        {timelineEvents.map((segment, index) => (
+        {timelineEvents.map((timelineEvent, index) => (
           <>
-            <StyledSegmentRow
-              key={segment.segmentId}
+            <StyledTimelineRow
+              key={timelineEvent.id}
               gridColumn='1/ -1'
               gridRow={index + 2}
               index={index}
-              playing={isPlayingSegment(segment, index)}
-              onClick={() => onSelectSegment(segment)}
+              playing={false}
+              onClick={() => onSelectSegment(timelineEvent)}
             >
               <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
                 <Box gridColumn='1' padding={1}>
-                  hi
+                  {timelineEvent.details.name}
                 </Box>
                 <Box gridColumn='2' padding={1}>
-                  bye
+                  {timelineEvent.details.name}
                 </Box>
               </Box>
-            </StyledSegmentRow>
+            </StyledTimelineRow>
           </>
         ))}
       </Box>
