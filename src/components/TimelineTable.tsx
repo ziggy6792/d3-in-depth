@@ -1,5 +1,5 @@
 import { FC, memo, useMemo, useState } from 'react';
-import { alpha, Box, Grid, styled } from '@mui/material';
+import { alpha, Box, Grid, styled, Typography } from '@mui/material';
 
 import { NodeInterface } from 'src/components/ForceGraph';
 
@@ -35,9 +35,6 @@ const StyledRow = styled(Box, {
     : undefined,
 }));
 
-const defaultCurrentTime = null;
-const defaultSelectedTime = null;
-
 // ToDo pass as props
 const columns = [
   { name: 'Time', template: '1fr' },
@@ -53,20 +50,10 @@ interface ITimelineProps extends ITimelineBaseProps {
 }
 
 const TimelineTable: FC<ITimelineProps> = ({ timelineEvents, rowHeight = '1fr' }) => {
-  const [currentTime, setCurrentTime] = useState<number>(defaultCurrentTime);
-  const [selectedTime, setSelectedTime] = useState<number>(defaultSelectedTime);
-
   return (
     <Grid container direction='column' rowSpacing={2} marginBottom={2}>
       <Grid item container>
-        <TimelineTableRows
-          timelineEvents={timelineEvents}
-          currentPlayTime={currentTime}
-          rowHeight={rowHeight}
-          onSelectEvent={(event) => {
-            //
-          }}
-        />
+        <TimelineTableRows timelineEvents={timelineEvents} rowHeight={rowHeight} />
       </Grid>
     </Grid>
   );
@@ -74,11 +61,9 @@ const TimelineTable: FC<ITimelineProps> = ({ timelineEvents, rowHeight = '1fr' }
 
 interface ISegmentDetailProps extends ITimelineBaseProps {
   timelineEvents: NodeInterface[];
-  currentPlayTime: number;
-  onSelectEvent: (event: NodeInterface) => void;
 }
 
-const TimelineTableRows: FC<ISegmentDetailProps> = ({ timelineEvents, currentPlayTime, onSelectEvent: onSelectSegment, rowHeight }) => {
+const TimelineTableRows: FC<ISegmentDetailProps> = ({ timelineEvents, rowHeight }) => {
   const gridTemplateColumns = useMemo(() => columns.map(({ template }) => template).join(' '), []);
 
   return (
@@ -99,7 +84,7 @@ const TimelineTableRows: FC<ISegmentDetailProps> = ({ timelineEvents, currentPla
           <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
             {columns.map(({ name }) => (
               <Box key={name} padding={1}>
-                {name}
+                <Typography color='white'> {name}</Typography>
               </Box>
             ))}
           </Box>
@@ -113,11 +98,15 @@ const TimelineTableRows: FC<ISegmentDetailProps> = ({ timelineEvents, currentPla
             gridRow={index + 2}
             showHighlight={index % 2 === 0}
             playing={false}
-            onClick={() => onSelectSegment(timelineEvent)}
+            onClick={() => null}
           >
             <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
-              <Box padding={1}>{timelineEvent.details.name}</Box>
-              <Box padding={1}>{timelineEvent.details.name}</Box>
+              <Box padding={1}>
+                <Typography color='white'>{timelineEvent.details.name} </Typography>
+              </Box>
+              <Box padding={1}>
+                <Typography color='white'>{timelineEvent.details.name} </Typography>
+              </Box>
             </Box>
           </StyledRow>
         ))}
