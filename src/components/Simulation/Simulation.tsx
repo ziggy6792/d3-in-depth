@@ -36,7 +36,7 @@ const Simulation: React.FC = () => {
     <>
       <Grid direction='column' container style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
         <Grid item>
-          <DragSliderAnimation value={time} onChange={(value) => dispatch({ type: 'setTime', payload: value })} />
+          <DragSliderAnimation value={time} onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })} />
         </Grid>
 
         <Grid item>

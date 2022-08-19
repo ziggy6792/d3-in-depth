@@ -10,7 +10,7 @@ const margin = { right: 50, left: 50 };
 
 interface IDragSliderProps {
   value: number;
-  onChange: (value: number) => void;
+  onValueChanged: (value: number) => void;
 }
 
 const useStyles = makeStyles()(() => ({
@@ -52,7 +52,7 @@ const useStyles = makeStyles()(() => ({
   trackLines: {},
 }));
 
-const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) => {
+const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged }) => {
   // Maybe don't need this
   const [svg, setSvg] = useState<null | TSelection>(null);
 
@@ -83,7 +83,6 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
       // svg.style('background-color', d3.hsl(newValue, 0.8, 0.8) as any);
       d3.select(handleRef.current).attr('cx', xScale(newValue));
       d3.select(labelRef.current).attr('x', xScale(newValue)).text(Math.floor(newValue));
-      onChange(newValue);
     },
     [svg]
   );
@@ -121,7 +120,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
 
     trackLines.call(
       d3.drag().on('drag', function (event) {
-        updateSlider(xScale.invert(event.x));
+        onValueChanged(xScale.invert(event.x));
         setMoving(false);
       })
     );
@@ -132,13 +131,13 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
     //   .tween('hue', function () {
     //     var i = d3.interpolate(20, 0);
     //     return function (t) {
-    //       updateSlider(i(t));
+    //       onValueChanged(i(t));
     //     };
     //   });
 
     svg.attr('opacity', 1);
 
-    updateSlider(0);
+    onValueChanged(0);
   }, [svg]);
 
   useInterval(() => {
@@ -148,7 +147,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
         setMoving(false);
         newSliderValue = 0;
       }
-      updateSlider(newSliderValue);
+      onValueChanged(newSliderValue);
     }
   }, 100);
 
