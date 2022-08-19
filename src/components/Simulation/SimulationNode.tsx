@@ -27,7 +27,7 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
       .select('rect')
       .transition()
       .duration(500)
-      .attr('fill', activeNode === node.data.id ? selectedColor : unselectedColor);
+      .attr('fill', activeNode === node.data ? selectedColor : unselectedColor);
   }, [activeNode, svg]);
 
   return (

@@ -1,18 +1,20 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import React, { useEffect } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
-import { GraphElements, ForceGraph } from 'src/components/ForceGraph';
+import { GraphElements, ForceGraph, NodeData } from 'src/components/ForceGraph';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 import SimulationNode from './SimulationNode';
 import SimulationTimeline from './SimulationTimeline';
 
-const data = {
-  nodes: [
-    { data: { id: '0', name: 'A', startTime: 10 } },
-    { data: { id: '1', name: 'B', startTime: 20 } },
-    { data: { id: '2', name: 'C', startTime: 30 } },
-    { data: { id: '3', name: 'D', startTime: 40 } },
-  ],
+const nodes = [
+  { id: '0', name: 'A', startTime: 10 },
+  { id: '1', name: 'B', startTime: 20 },
+  { id: '2', name: 'C', startTime: 30 },
+  { id: '3', name: 'D', startTime: 40 },
+] as NodeData[];
+
+const graphElements = {
+  nodes: nodes.map((data) => ({ data })),
   links: [
     { source: '3', target: '0' },
     { source: '3', target: '1' },
@@ -22,15 +24,12 @@ const data = {
   ],
 } as GraphElements;
 
-// Fetched from api
-const nodeSequenceResponse = { [10]: '1', [20]: '2', [50]: '1' };
-
 const Simulation: React.FC = () => {
   const { dispatch } = useDispatchSimulationContext();
   const { time } = useSimulationContext();
 
   useEffect(() => {
-    dispatch({ type: 'setNodeSequence', payload: nodeSequenceResponse });
+    dispatch({ type: 'serNodes', payload: nodes });
   }, [dispatch]);
 
   return (
@@ -43,10 +42,10 @@ const Simulation: React.FC = () => {
         <Grid item>
           <Grid container direction='row'>
             <Grid item xs={6}>
-              <ForceGraph graphElements={data} renderNode={(node) => <SimulationNode node={node} />} />
+              <ForceGraph graphElements={graphElements} renderNode={(node) => <SimulationNode node={node} />} />
             </Grid>
             <Grid item xs={6}>
-              <SimulationTimeline events={data.nodes} />
+              <SimulationTimeline events={graphElements.nodes} />
             </Grid>
           </Grid>
         </Grid>

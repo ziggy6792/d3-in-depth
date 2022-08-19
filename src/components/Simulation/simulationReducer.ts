@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import _ from 'lodash';
-
-type NodeSequence = { [key: number]: string };
+import { NodeData } from 'src/components/ForceGraph';
 
 export interface ISumulationState {
   time: number;
-  nodeSequence: NodeSequence;
-  activeNode: string | null;
+  nodes: NodeData[];
+  activeNode: NodeData | null;
 }
 
 export type IAction =
@@ -20,13 +19,13 @@ export type IAction =
       payload: number;
     }
   | {
-      type: 'setNodeSequence';
-      payload: NodeSequence;
+      type: 'serNodes';
+      payload: NodeData[];
     };
 
 export const initialState: ISumulationState = {
   time: 0,
-  nodeSequence: {},
+  nodes: [],
   activeNode: null,
 };
 
@@ -35,21 +34,19 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
 
   switch (type) {
     case 'setTime': {
-      const nextNodeStartTime = _.chain(Object.keys(state.nodeSequence))
+      const activeNode = _.chain(state.nodes)
         .findLast((dec) => {
-          return +dec < action.payload;
+          return +dec.startTime < action.payload;
         })
         .value();
-
-      const activeNode = state.nodeSequence[nextNodeStartTime];
 
       return { ...state, time: action.payload, activeNode };
     }
     case 'incrementTime': {
       return { ...state, time: state.time + action.payload };
     }
-    case 'setNodeSequence': {
-      return { ...state, nodeSequence: action.payload };
+    case 'serNodes': {
+      return { ...state, nodes: action.payload };
     }
     default:
       return state;
