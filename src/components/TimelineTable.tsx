@@ -1,7 +1,5 @@
-import { FC, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { alpha, Box, Grid, Typography } from '@mui/material';
-
-import { NodeInterface } from 'src/components/ForceGraph';
 import { makeStyles } from 'src/makeStyles';
 
 type SegmentRowProp = {
@@ -44,32 +42,32 @@ const columns = [
   { name: 'Name', template: '2fr' },
 ];
 
-interface ITimelineBaseProps {
+interface ITimelineBaseProps<RowType> {
   rowHeight?: string;
-  selectedRow?: NodeInterface;
-  onRowSelected?: (selectedRow: NodeInterface) => void;
-  renderRow?: (rowData: NodeInterface) => React.ReactNode;
+  selectedRow?: RowType;
+  onRowSelected?: (selectedRow: RowType) => void;
+  renderRow?: (rowData: RowType) => React.ReactNode;
 }
 
-interface ITimelineProps extends ITimelineBaseProps {
-  timelineEvents: NodeInterface[];
+interface ITimelineProps<RowType> extends ITimelineBaseProps<RowType> {
+  rows: RowType[];
 }
 
-const TimelineTable: FC<ITimelineProps> = ({ timelineEvents, rowHeight = '1fr', ...rest }) => {
+const TimelineTable = <RowType,>({ rows, rowHeight = '1fr', ...rest }: ITimelineProps<RowType>) => {
   return (
     <Grid container direction='column' rowSpacing={2} marginBottom={2}>
       <Grid item container>
-        <TimelineTableRows timelineEvents={timelineEvents} rowHeight={rowHeight} {...rest} />
+        <TimelineTableRows rows={rows} rowHeight={rowHeight} {...rest} />
       </Grid>
     </Grid>
   );
 };
 
-interface ISegmentDetailProps extends ITimelineBaseProps {
-  timelineEvents: NodeInterface[];
+interface ISegmentDetailProps<RowType> extends ITimelineBaseProps<RowType> {
+  rows: RowType[];
 }
 
-const TimelineTableRows: FC<ISegmentDetailProps> = ({ timelineEvents, rowHeight, ...rest }) => {
+const TimelineTableRows = <RowType,>({ rows, rowHeight, ...rest }: ISegmentDetailProps<RowType>) => {
   const gridTemplateColumns = useMemo(() => columns.map(({ template }) => template).join(' '), []);
 
   const { classes } = useTableStyles();
@@ -80,7 +78,7 @@ const TimelineTableRows: FC<ISegmentDetailProps> = ({ timelineEvents, rowHeight,
       <Box
         display='grid'
         gridTemplateColumns={gridTemplateColumns}
-        gridTemplateRows={`1fr repeat(${timelineEvents.length}, ${rowHeight}) auto`}
+        gridTemplateRows={`1fr repeat(${rows.length}, ${rowHeight}) auto`}
         columnGap={0.4}
         rowGap={1}
       >
@@ -99,25 +97,25 @@ const TimelineTableRows: FC<ISegmentDetailProps> = ({ timelineEvents, rowHeight,
           </Box>
         </Box>
 
-        {timelineEvents.map((timelineEvent, index) => (
-          <TimelineTableRow index={index} key={timelineEvent.id} row={timelineEvent} gridTemplateColumns={gridTemplateColumns} {...rest} />
+        {rows.map((row, index) => (
+          <TimelineTableRow index={index} key={index} row={row} gridTemplateColumns={gridTemplateColumns} {...rest} />
         ))}
       </Box>
     </Box>
   );
 };
 
-interface TimelineTableRowProps extends ITimelineBaseProps {
-  row: NodeInterface;
+interface TimelineTableRowProps<RowType> extends ITimelineBaseProps<RowType> {
+  row: RowType;
   index: number;
   gridTemplateColumns: string;
 }
 
-const TimelineTableRow: FC<TimelineTableRowProps> = ({ row, index, gridTemplateColumns, selectedRow, renderRow }) => {
+const TimelineTableRow = <RowType,>({ row, index, gridTemplateColumns, selectedRow, renderRow }: TimelineTableRowProps<RowType>) => {
   const { classes: rowClasses } = useRowStyles({ showHighlight: index % 2 === 0, playing: row === selectedRow, isClickable: true });
 
   return (
-    <Box className={rowClasses.tableRow} key={row.id} gridColumn='1/ -1' gridRow={index + 2} onClick={() => null}>
+    <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={index + 2} onClick={() => null}>
       <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
         <Box padding={1}>
           <Typography color='white'>bla </Typography>
