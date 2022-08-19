@@ -36,12 +36,6 @@ const useRowStyles = makeStyles<IRowStylesProp>()((theme, { showHighlight, playi
   },
 }));
 
-// ToDo pass as props
-const columns = [
-  { name: 'Time', template: '1fr' },
-  { name: 'Name', template: '2fr' },
-];
-
 interface ITimelineBaseProps<RowType> {
   rowHeight?: string;
   selectedRow?: RowType;
@@ -49,12 +43,18 @@ interface ITimelineBaseProps<RowType> {
   renderRow?: (rowData: RowType) => React.ReactNode;
 }
 
+interface IColumn {
+  name: string;
+  template: string;
+}
+
 interface ITimelineProps<RowType> extends ITimelineBaseProps<RowType> {
+  columns: IColumn[];
   rows: RowType[];
 }
 
-const TimelineTable = <RowType,>({ rows, rowHeight = '1fr', ...rest }: ITimelineProps<RowType>) => {
-  const gridTemplateColumns = useMemo(() => columns.map(({ template }) => template).join(' '), []);
+const TimelineTable = <RowType,>({ rows, rowHeight = '1fr', columns, ...rest }: ITimelineProps<RowType>) => {
+  const gridTemplateColumns = useMemo(() => columns.map(({ template }) => template).join(' '), [columns]);
 
   const { classes } = useTableStyles();
   const { classes: rowClasses } = useRowStyles({ showHighlight: false, playing: false, isClickable: false });

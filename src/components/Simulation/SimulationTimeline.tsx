@@ -9,6 +9,10 @@ interface ISimulationTimelineProps {
 const SimulationTimeline: React.FC<ISimulationTimelineProps> = ({ events }) => {
   return (
     <TimelineTable
+      columns={[
+        { name: 'Time', template: '1fr' },
+        { name: 'Name', template: '2fr' },
+      ]}
       rows={events}
       renderRow={(node) => (
         <>
