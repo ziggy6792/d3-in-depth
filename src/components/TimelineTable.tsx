@@ -101,11 +101,11 @@ interface TimelineTableRowProps<RowType> extends ITimelineBaseProps<RowType> {
   gridTemplateColumns: string;
 }
 
-const TimelineTableRow = <RowType,>({ row, index, gridTemplateColumns, selectedRow, renderRow }: TimelineTableRowProps<RowType>) => {
+const TimelineTableRow = <RowType,>({ row, index, gridTemplateColumns, selectedRow, renderRow, onRowSelected }: TimelineTableRowProps<RowType>) => {
   const { classes: rowClasses } = useRowStyles({ showHighlight: index % 2 === 0, playing: row === selectedRow, isClickable: true });
 
   return (
-    <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={index + 2} onClick={() => null}>
+    <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={index + 2} onClick={() => onRowSelected(row)}>
       <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
         {renderRow && renderRow(row)}
       </Box>

@@ -88,6 +88,14 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onChange }) =>
     [svg]
   );
 
+  useEffect(() => {
+    if (!svg) {
+      setSvg(d3.select(svgRef.current));
+      return;
+    }
+    updateSlider(value);
+  }, [svg, value]);
+
   // Draw initial d3
   useEffect(() => {
     if (!svg) {

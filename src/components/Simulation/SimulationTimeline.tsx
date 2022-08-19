@@ -1,24 +1,24 @@
 import { Box, Typography } from '@mui/material';
-import { NodeInterface } from 'src/components/ForceGraph/types';
+import { NodeData, NodeInterface } from 'src/components/ForceGraph/types';
 import TimelineTable from 'src/components/TimelineTable';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 
 interface ISimulationTimelineProps {
-  events: NodeInterface[];
+  events: NodeData[];
 }
 
 interface ISimulationTimelineRowProps {
-  node: NodeInterface;
+  node: NodeData;
 }
 
 const SimulationTimelineRow: React.FC<ISimulationTimelineRowProps> = ({ node }) => {
   return (
     <>
       <Box padding={1}>
-        <Typography color='white'>{node.data.id}</Typography>
+        <Typography color='white'>{node.startTime}</Typography>
       </Box>
       <Box padding={1}>
-        <Typography color='white'>{node.data.name}</Typography>
+        <Typography color='white'>{node.name}</Typography>
       </Box>
     </>
   );
@@ -35,7 +35,7 @@ const SimulationTimeline: React.FC<ISimulationTimelineProps> = ({ events }) => {
         { name: 'Name', template: '2fr' },
       ]}
       rows={events}
-      // onRowSelected={(row) => dispatch({type: 'setTime', payload: row.details})}
+      onRowSelected={(node) => dispatch({ type: 'setTime', payload: node.startTime })}
       renderRow={(node) => <SimulationTimelineRow node={node} />}
     />
   );

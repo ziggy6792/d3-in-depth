@@ -45,7 +45,7 @@ const Simulation: React.FC = () => {
               <ForceGraph graphElements={graphElements} renderNode={(node) => <SimulationNode node={node} />} />
             </Grid>
             <Grid item xs={6}>
-              <SimulationTimeline events={graphElements.nodes} />
+              <SimulationTimeline events={nodes} />
             </Grid>
           </Grid>
         </Grid>
