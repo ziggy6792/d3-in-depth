@@ -26,7 +26,7 @@ const SimulationTimelineRow: React.FC<ISimulationTimelineRowProps> = ({ node }) 
 
 const SimulationTimeline: React.FC<ISimulationTimelineProps> = ({ events }) => {
   const { dispatch } = useDispatchSimulationContext();
-  const { time } = useSimulationContext();
+  const { time, activeNode } = useSimulationContext();
 
   return (
     <TimelineTable
@@ -36,6 +36,7 @@ const SimulationTimeline: React.FC<ISimulationTimelineProps> = ({ events }) => {
       ]}
       rows={events}
       onRowSelected={(node) => dispatch({ type: 'setTime', payload: node.startTime })}
+      selectedRow={activeNode}
       renderRow={(node) => <SimulationTimelineRow node={node} />}
     />
   );

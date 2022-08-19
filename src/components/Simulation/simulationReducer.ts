@@ -36,7 +36,7 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
     case 'setTime': {
       const activeNode = _.chain(state.nodes)
         .findLast((dec) => {
-          return +dec.startTime < action.payload;
+          return +dec.startTime <= action.payload;
         })
         .value();
 
