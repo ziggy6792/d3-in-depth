@@ -2,12 +2,6 @@ import { memo, useMemo } from 'react';
 import { alpha, Box, Grid, Typography } from '@mui/material';
 import { makeStyles } from 'src/makeStyles';
 
-type SegmentRowProp = {
-  playing: boolean;
-  showHighlight: boolean;
-  isClickable?: boolean;
-};
-
 const useTableStyles = makeStyles()((theme) => ({
   boxBase: {
     backgroundColor: theme.palette.common.darkCloudyBlue,
@@ -17,7 +11,13 @@ const useTableStyles = makeStyles()((theme) => ({
   },
 }));
 
-const useRowStyles = makeStyles<SegmentRowProp>()((theme, { showHighlight, playing, isClickable }) => ({
+interface IRowStylesProp {
+  playing: boolean;
+  showHighlight: boolean;
+  isClickable?: boolean;
+}
+
+const useRowStyles = makeStyles<IRowStylesProp>()((theme, { showHighlight, playing, isClickable }) => ({
   tableRow: {
     backgroundColor: showHighlight ? theme.palette.common.darkCloudyBlue : undefined,
     borderRadius: theme.spacing(1),
@@ -54,54 +54,44 @@ interface ITimelineProps<RowType> extends ITimelineBaseProps<RowType> {
 }
 
 const TimelineTable = <RowType,>({ rows, rowHeight = '1fr', ...rest }: ITimelineProps<RowType>) => {
-  return (
-    <Grid container direction='column' rowSpacing={2} marginBottom={2}>
-      <Grid item container>
-        <TimelineTableRows rows={rows} rowHeight={rowHeight} {...rest} />
-      </Grid>
-    </Grid>
-  );
-};
-
-interface ISegmentDetailProps<RowType> extends ITimelineBaseProps<RowType> {
-  rows: RowType[];
-}
-
-const TimelineTableRows = <RowType,>({ rows, rowHeight, ...rest }: ISegmentDetailProps<RowType>) => {
   const gridTemplateColumns = useMemo(() => columns.map(({ template }) => template).join(' '), []);
 
   const { classes } = useTableStyles();
   const { classes: rowClasses } = useRowStyles({ showHighlight: false, playing: false, isClickable: false });
 
   return (
-    <Box sx={{ width: 1 }}>
-      <Box
-        display='grid'
-        gridTemplateColumns={gridTemplateColumns}
-        gridTemplateRows={`1fr repeat(${rows.length}, ${rowHeight}) auto`}
-        columnGap={0.4}
-        rowGap={1}
-      >
-        {/* Column highlights */}
-        {columns.map(({ name }, index) => (
-          <Box className={classes.boxBase} key={name} gridColumn={index + 1} gridRow='1/ -1' padding={1}></Box>
-        ))}
+    <Grid container direction='column' rowSpacing={2} marginBottom={2}>
+      <Grid item container>
+        <Box sx={{ width: 1 }}>
+          <Box
+            display='grid'
+            gridTemplateColumns={gridTemplateColumns}
+            gridTemplateRows={`1fr repeat(${rows.length}, ${rowHeight}) auto`}
+            columnGap={0.4}
+            rowGap={1}
+          >
+            {/* Column highlights */}
+            {columns.map(({ name }, index) => (
+              <Box className={classes.boxBase} key={name} gridColumn={index + 1} gridRow='1/ -1' padding={1}></Box>
+            ))}
 
-        <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={1}>
-          <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
-            {columns.map(({ name }) => (
-              <Box key={name} padding={1}>
-                <Typography color='white'> {name}</Typography>
+            <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={1}>
+              <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
+                {columns.map(({ name }) => (
+                  <Box key={name} padding={1}>
+                    <Typography color='white'> {name}</Typography>
+                  </Box>
+                ))}
               </Box>
+            </Box>
+
+            {rows.map((row, index) => (
+              <TimelineTableRow index={index} key={index} row={row} gridTemplateColumns={gridTemplateColumns} {...rest} />
             ))}
           </Box>
         </Box>
-
-        {rows.map((row, index) => (
-          <TimelineTableRow index={index} key={index} row={row} gridTemplateColumns={gridTemplateColumns} {...rest} />
-        ))}
-      </Box>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 
@@ -117,16 +107,10 @@ const TimelineTableRow = <RowType,>({ row, index, gridTemplateColumns, selectedR
   return (
     <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={index + 2} onClick={() => null}>
       <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
-        <Box padding={1}>
-          <Typography color='white'>bla </Typography>
-        </Box>
-        <Box padding={1}>
-          <Typography color='white'>bla </Typography>
-        </Box>
         {renderRow && renderRow(row)}
       </Box>
     </Box>
   );
 };
 
-export default memo(TimelineTable);
+export default TimelineTable;
