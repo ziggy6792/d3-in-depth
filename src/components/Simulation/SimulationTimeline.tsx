@@ -15,10 +15,10 @@ const SimulationTimelineRow: React.FC<ISimulationTimelineRowProps> = ({ node }) 
   return (
     <>
       <Box padding={1}>
-        <Typography color='white'>{node.id}</Typography>
+        <Typography color='white'>{node.data.id}</Typography>
       </Box>
       <Box padding={1}>
-        <Typography color='white'>{node.details.name}</Typography>
+        <Typography color='white'>{node.data.name}</Typography>
       </Box>
     </>
   );

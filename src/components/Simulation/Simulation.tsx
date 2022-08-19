@@ -8,10 +8,10 @@ import SimulationTimeline from './SimulationTimeline';
 
 const data = {
   nodes: [
-    { id: '0', details: { name: 'A' } },
-    { id: '1', details: { name: 'B' } },
-    { id: '2', details: { name: 'C' } },
-    { id: '3', details: { name: 'D' } },
+    { data: { id: '0', name: 'A', startTime: 10 } },
+    { data: { id: '1', name: 'B', startTime: 20 } },
+    { data: { id: '2', name: 'C', startTime: 30 } },
+    { data: { id: '3', name: 'D', startTime: 40 } },
   ],
   links: [
     { source: '3', target: '0' },

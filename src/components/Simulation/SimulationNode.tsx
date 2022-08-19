@@ -27,14 +27,14 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
       .select('rect')
       .transition()
       .duration(500)
-      .attr('fill', activeNode === node.id ? selectedColor : unselectedColor);
+      .attr('fill', activeNode === node.data.id ? selectedColor : unselectedColor);
   }, [activeNode, svg]);
 
   return (
     <svg ref={svgRef}>
       <rect width={60} height={60} rx={20}></rect>
       <text fill='white' x={30} y={30} textAnchor='middle' dominantBaseline='middle' fontSize='2em'>
-        {node.details.name}
+        {node.data.name}
         {node.index}
       </text>
     </svg>

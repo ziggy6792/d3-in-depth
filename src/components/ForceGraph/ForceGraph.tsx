@@ -57,7 +57,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
           'link',
           d3
             .forceLink(links)
-            .id((d: any) => d.id)
+            .id((d: NodeInterface) => d.data.id)
             .distance(240)
         )
         .force('charge', d3.forceManyBody().strength(-240))
@@ -106,7 +106,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
         <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
-          <g className='node-container' key={node.id} opacity={0}>
+          <g className='node-container' key={node.data.id} opacity={0}>
             <g className='node'>{renderNode(node)}</g>
           </g>
         ))}
