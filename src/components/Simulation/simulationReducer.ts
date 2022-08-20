@@ -47,7 +47,7 @@ const updateState = (state: ISumulationState, newState: Partial<ISumulationState
     })
     .value();
 
-  return { ...state, ...newState, activeEvents, selectedEvent: newSelectedEvent || _(events).findLast((event) => newTime >= event.startTime), time: newTime };
+  return { ...state, ...newState, activeEvents, selectedEvent: newSelectedEvent || _(events).findLast((event) => newTime >= event.startTime) };
 };
 
 export const simulationReducer = (state: ISumulationState, action: IAction): ISumulationState => {

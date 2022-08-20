@@ -43,8 +43,6 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
     });
   }, [activeEvents, svg]);
 
-  console.log('activeEvents', activeEvents);
-
   return (
     <svg ref={svgRef}>
       <rect width={60} height={60} rx={20}></rect>
