@@ -1,6 +1,7 @@
-import { Grid } from '@mui/material';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Button, Grid } from '@mui/material';
 import _ from 'lodash';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
 import { GraphElements, ForceGraph, GraphNode } from 'src/components/ForceGraph';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
@@ -17,9 +18,10 @@ const nodes = [nodeA, nodeB, nodeC, nodeD] as GraphNode[];
 
 const maxTime = 180;
 
-const events = _.chain(_.range(10).map(() => ({ node: nodes[_.random(0, nodes.length - 1)], startTime: _.random(0, maxTime) })))
-  .orderBy((e) => e.startTime)
-  .value() as SimulationEvent[];
+const generateRandomEvents = () =>
+  _(_.range(15).map(() => ({ node: nodes[_.random(0, nodes.length - 1)], startTime: _.random(0, maxTime) })))
+    .orderBy((e) => e.startTime)
+    .value() as SimulationEvent[];
 
 // const events = [
 //   { node: nodeA, startTime: 10 },
@@ -42,15 +44,21 @@ const graphElements = {
 
 const Simulation: React.FC = () => {
   const { dispatch } = useDispatchSimulationContext();
-  const { time } = useSimulationContext();
+  const { time, events } = useSimulationContext();
+
+  const fetchEvents = useCallback(() => dispatch({ type: 'setEvents', payload: generateRandomEvents() }), [dispatch]);
 
   useEffect(() => {
-    dispatch({ type: 'setEvents', payload: events });
-  }, [dispatch]);
+    fetchEvents();
+  }, []);
 
   return (
     <>
       <Grid direction='column' container style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
+        <Button variant='contained' onClick={() => fetchEvents()}>
+          Fetch Events
+        </Button>
+
         <Grid item>
           <DragSliderAnimation value={time} onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })} />
         </Grid>
