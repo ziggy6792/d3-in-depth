@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as d3 from 'd3';
 import { useEffect, useRef, useState } from 'react';
-import { NodeData, NodeInterface } from 'src/components/ForceGraph';
+import { GraphNode, NodeData, NodeInterface } from 'src/components/ForceGraph';
 import { TSelection } from 'src/d3Types';
 import { easeInterpolate } from 'src/utils/d3-utils';
 import { useSimulationContext } from './SimulaitionProvider';
 
 interface ISimulationNodeProps {
-  node: NodeData;
+  node: GraphNode;
 }
 
 const selectedColor = '#85054d';
@@ -34,8 +34,11 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
       return;
     }
     svg.select('rect').attr('fill', () => {
-      if (activeNodes?.find((n) => n === node)) {
-        const colorX = Math.abs(node.startTime + eventDuration - time);
+      const myActiveNodes = activeNodes?.filter((n) => n.id === node.id);
+
+      if (myActiveNodes.length > 0) {
+        const mostActive = myActiveNodes[0];
+        const colorX = Math.abs(mostActive.startTime + eventDuration - time);
         return easingColorScale(colorX);
       }
       return unselectedColor;

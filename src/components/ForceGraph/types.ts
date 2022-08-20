@@ -9,8 +9,12 @@ export interface NodeData extends Idable {
   startTime: number;
 }
 
+export interface GraphNode extends Idable {
+  name: string;
+}
+
 export interface NodeInterface extends SimulationNodeDatum {
-  data: NodeData;
+  data: GraphNode;
 }
 
 export interface GraphElements {

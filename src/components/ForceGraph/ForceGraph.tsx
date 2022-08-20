@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { D3DragEvent, SimulationLinkDatum } from 'd3';
-import { NodeInterface, GraphElements, NodeData } from './types';
+import { NodeInterface, GraphElements, NodeData, GraphNode } from './types';
 import { TSelection } from 'src/d3Types';
 
 type Simulation = d3.Simulation<NodeInterface, SimulationLinkDatum<NodeInterface>>;
@@ -10,7 +10,7 @@ type DragEvent = D3DragEvent<SVGCircleElement, NodeInterface, NodeInterface>;
 
 interface FundGraphGeneratorProps {
   graphElements: GraphElements;
-  renderNode: (node: NodeData) => React.ReactNode;
+  renderNode: (node: GraphNode) => React.ReactNode;
 }
 
 // ToDo: Make responsive
