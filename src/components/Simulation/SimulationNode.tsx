@@ -22,9 +22,11 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
   const easingColorScale = d3
     .scaleLinear()
     .domain([0, eventDuration])
-    .interpolate(easeInterpolate(d3.easePolyInOut))
-    .range([selectedColor, unselectedColor] as any[])
+    .interpolate(easeInterpolate(d3.easeQuadOut))
+    .range([unselectedColor, selectedColor] as any[])
     .clamp(true);
+
+  console.log('activeNodes', activeNodes);
 
   useEffect(() => {
     if (!svg) {
@@ -33,7 +35,7 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
     }
     svg.select('rect').attr('fill', () => {
       if (activeNodes?.find((n) => n === node)) {
-        const colorX = Math.abs(node.startTime + 0.5 * eventDuration - time);
+        const colorX = Math.abs(node.startTime + eventDuration - time);
         return easingColorScale(colorX);
       }
       return unselectedColor;

@@ -28,7 +28,7 @@ export const initialState: ISumulationState = {
   time: 0,
   nodes: [],
   activeNodes: null,
-  eventDuration: 30,
+  eventDuration: 10,
 };
 
 export const simulationReducer = (state: ISumulationState, action: IAction): ISumulationState => {
@@ -40,7 +40,7 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
 
       const activeNodes = _.chain(state.nodes)
         .filter((node) => {
-          return currTime <= node.startTime + state.eventDuration && currTime > node.startTime;
+          return currTime <= node.startTime + state.eventDuration && currTime >= node.startTime;
         })
         .value();
 
