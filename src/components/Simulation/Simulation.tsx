@@ -2,10 +2,11 @@ import { Grid } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
-import { GraphElements, ForceGraph, Event, GraphNode } from 'src/components/ForceGraph';
+import { GraphElements, ForceGraph, GraphNode } from 'src/components/ForceGraph';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 import SimulationNode from './SimulationNode';
 import SimulationTimeline from './SimulationTimeline';
+import { Event } from './types';
 
 const nodeA = { id: '0', name: 'A' };
 const nodeB = { id: '1', name: 'B' };

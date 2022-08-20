@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { Event } from 'src/components/ForceGraph/types';
+import { Event } from './types';
 import TimelineTable from 'src/components/TimelineTable';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 

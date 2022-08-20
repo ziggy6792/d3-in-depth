@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import _ from 'lodash';
-import { Event } from 'src/components/ForceGraph';
+import { Event } from './types';
 
 export interface ISumulationState {
   time: number;

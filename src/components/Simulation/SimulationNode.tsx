@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as d3 from 'd3';
 import { useEffect, useRef, useState } from 'react';
-import { GraphNode, Event, NodeInterface } from 'src/components/ForceGraph';
+import { GraphNode, NodeInterface } from 'src/components/ForceGraph';
+import { Event } from './types';
+
 import { TSelection } from 'src/d3Types';
 import { easeInterpolate } from 'src/utils/d3-utils';
 import { useSimulationContext } from './SimulaitionProvider';
