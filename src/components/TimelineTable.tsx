@@ -25,8 +25,8 @@ const useRowStyles = makeStyles<IRowStylesProp>()((theme, { showHighlight, playi
     zIndex: 0,
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    border: playing ? '3px solid' : '',
-    borderColor: playing ? theme.palette.primary.main : '',
+    border: '3px solid',
+    borderColor: playing ? theme.palette.primary.main : 'transparent',
     '&:hover': isClickable
       ? {
           color: theme.palette.common.bhaBlue,
