@@ -1,4 +1,5 @@
 import { Grid } from '@mui/material';
+import _ from 'lodash';
 import React, { useEffect } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
 import { GraphElements, ForceGraph, NodeData } from 'src/components/ForceGraph';
@@ -9,12 +10,15 @@ import SimulationTimeline from './SimulationTimeline';
 const nodes = [
   { id: '0', name: 'A', startTime: 10 },
   { id: '1', name: 'B', startTime: 20 },
+  { id: '0', name: 'A', startTime: 25 },
   { id: '2', name: 'C', startTime: 30 },
   { id: '3', name: 'D', startTime: 40 },
 ] as NodeData[];
 
+const graphNodes = _.uniqBy(nodes, (n) => n.id).map(({ id, name }) => ({ data: { id, name } }));
+
 const graphElements = {
-  nodes: nodes.map((data) => ({ data })),
+  nodes: graphNodes,
   links: [
     { source: '3', target: '0' },
     { source: '3', target: '1' },

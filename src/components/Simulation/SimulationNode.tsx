@@ -36,7 +36,7 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
     svg.select('rect').attr('fill', () => {
       const myActiveNodes = activeNodes?.filter((n) => n.id === node.id);
 
-      if (myActiveNodes.length > 0) {
+      if (myActiveNodes?.length > 0) {
         const mostActive = myActiveNodes[0];
         const colorX = Math.abs(mostActive.startTime + eventDuration - time);
         return easingColorScale(colorX);
