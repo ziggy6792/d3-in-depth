@@ -37,19 +37,17 @@ export const initialState: ISumulationState = {
   eventDuration: 10,
 };
 
-const getStateFromTime = (state: ISumulationState, newTime: number, newSelectedEvent?: SimulationEvent): ISumulationState => {
+const updateState = (state: ISumulationState, newState: Partial<ISumulationState>): ISumulationState => {
   const { events, eventDuration } = state;
+  const { time: newTime, selectedEvent: newSelectedEvent } = newState;
+
   const activeEvents = _.chain(events)
     .filter((node) => {
       return newTime <= node.startTime + eventDuration && newTime >= node.startTime;
     })
     .value();
 
-  if (newSelectedEvent) return { ...state, activeEvents, selectedEvent: newSelectedEvent, time: newTime };
-
-  newSelectedEvent = newSelectedEvent || _(events).findLast((event) => newTime >= event.startTime);
-
-  return { ...state, activeEvents, selectedEvent: newSelectedEvent, time: newTime };
+  return { ...state, ...newState, activeEvents, selectedEvent: newSelectedEvent || _(events).findLast((event) => newTime >= event.startTime), time: newTime };
 };
 
 export const simulationReducer = (state: ISumulationState, action: IAction): ISumulationState => {
@@ -58,20 +56,20 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
   switch (type) {
     case 'setTime': {
       const time = action.payload;
-      return getStateFromTime(state, time);
+      return updateState(state, { time });
     }
     case 'setSelectedEvent': {
-      const newSelectedEvent = action.payload;
-      return getStateFromTime(state, newSelectedEvent.startTime, newSelectedEvent);
+      const selectedEvent = action.payload;
+      return updateState(state, { time: selectedEvent.startTime, selectedEvent });
     }
     case 'incrementTime': {
       const time = state.time + action.payload;
-      return getStateFromTime(state, time);
+      return updateState(state, { time });
     }
     case 'setEvents': {
       const events = _.orderBy(action.payload, (node) => node.startTime);
       const time = 0;
-      return getStateFromTime({ ...state, events }, time);
+      return updateState(state, { time, events });
     }
     default:
       return state;
