@@ -41,7 +41,7 @@ const Simulation: React.FC = () => {
   const { time } = useSimulationContext();
 
   useEffect(() => {
-    dispatch({ type: 'serNodes', payload: events });
+    dispatch({ type: 'setEvents', payload: events });
   }, [dispatch]);
 
   return (
