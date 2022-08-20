@@ -35,9 +35,9 @@ const SimulationTimeline: React.FC<ISimulationTimelineProps> = ({ events }) => {
         { name: 'Name', template: '2fr' },
       ]}
       rows={events}
-      onRowSelected={(node) => dispatch({ type: 'setTime', payload: node.startTime })}
-      selectedRow={activeEvents?.length ? activeEvents[0] : null}
-      renderRow={(node) => <SimulationTimelineRow event={node} />}
+      onRowSelected={(event) => dispatch({ type: 'setTime', payload: event.startTime })}
+      selectedRow={activeEvents?.length ? activeEvents[activeEvents?.length - 1] : null}
+      renderRow={(event) => <SimulationTimelineRow event={event} />}
     />
   );
 };

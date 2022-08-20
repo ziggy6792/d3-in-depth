@@ -35,7 +35,7 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
       const eventsWithMe = activeEvents?.filter((event) => event.node === node);
 
       if (eventsWithMe?.length > 0) {
-        const mostActive = eventsWithMe[0]; // most recent
+        const mostActive = eventsWithMe[eventsWithMe?.length - 1]; // most recent
         const colorX = Math.abs(mostActive.startTime + eventDuration - time);
         return easingColorScale(colorX);
       }
