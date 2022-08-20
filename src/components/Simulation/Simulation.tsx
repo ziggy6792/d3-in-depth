@@ -15,16 +15,19 @@ const nodeD = { id: '3', name: 'D' };
 
 const nodes = [nodeA, nodeB, nodeC, nodeD] as GraphNode[];
 
-const events = [
-  { node: nodeA, startTime: 10 },
-  { node: nodeA, startTime: 19 },
-  { node: nodeA, startTime: 28 },
-  { node: nodeA, startTime: 37 },
-  // { id: '1', name: 'B', startTime: 20 },
-  // { id: '1', startTime: 25 },
-  // { id: '2', name: 'C', startTime: 30 },
-  // { id: '3', name: 'D', startTime: 40 },
-] as SimulationEvent[];
+const maxTime = 180;
+
+const events = _.chain(_.range(10).map(() => ({ node: nodes[_.random(0, nodes.length - 1)], startTime: _.random(0, maxTime) })))
+  .orderBy((e) => e.startTime)
+  .value() as SimulationEvent[];
+
+// const events = [
+//   { node: nodeA, startTime: 10 },
+//   { node: nodeA, startTime: 19 },
+//   { node: nodeA, startTime: 28 },
+//   { node: nodeA, startTime: 37 },
+
+// ] as SimulationEvent[];
 
 const graphElements = {
   nodes: nodes.map((node) => ({ data: node })),
