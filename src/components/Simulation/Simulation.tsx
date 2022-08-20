@@ -16,7 +16,7 @@ const nodeD = { id: '3', name: 'D' };
 
 const nodes = [nodeA, nodeB, nodeC, nodeD] as GraphNode[];
 
-const maxTime = 180;
+const maxTime = 20;
 
 const generateRandomEvents = () =>
   _(_.range(15).map(() => ({ node: nodes[_.random(0, nodes.length - 1)], startTime: _.random(0, maxTime) })))

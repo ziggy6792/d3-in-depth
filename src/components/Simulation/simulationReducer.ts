@@ -75,7 +75,7 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
     case 'setEvents': {
       const events = _.orderBy(action.payload, (node) => node.startTime);
       const time = 0;
-      const { activeEvents, selectedEvent } = getActiveEvents(state, time);
+      const { activeEvents, selectedEvent } = getActiveEvents({ ...state, events }, time);
       return { ...state, time, events, activeEvents, selectedEvent };
     }
     default:
