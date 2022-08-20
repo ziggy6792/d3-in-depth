@@ -2,32 +2,37 @@ import { Grid } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
-import { GraphElements, ForceGraph, NodeData } from 'src/components/ForceGraph';
+import { GraphElements, ForceGraph, Event, GraphNode } from 'src/components/ForceGraph';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 import SimulationNode from './SimulationNode';
 import SimulationTimeline from './SimulationTimeline';
 
-const nodes = [
-  { id: '0', startTime: 10 },
-  { id: '0', startTime: 19 },
-  { id: '0', startTime: 28 },
-  { id: '0', startTime: 37 },
+const nodeA = { id: '0', name: 'A' };
+const nodeB = { id: '1', name: 'B' };
+const nodeC = { id: '2', name: 'C' };
+const nodeD = { id: '3', name: 'D' };
+
+const nodes = [nodeA, nodeB, nodeC, nodeD] as GraphNode[];
+
+const events = [
+  { node: nodeA, startTime: 10 },
+  { node: nodeA, startTime: 19 },
+  { node: nodeA, startTime: 28 },
+  { node: nodeA, startTime: 37 },
   // { id: '1', name: 'B', startTime: 20 },
   // { id: '1', startTime: 25 },
   // { id: '2', name: 'C', startTime: 30 },
   // { id: '3', name: 'D', startTime: 40 },
-] as NodeData[];
-
-const graphNodes = [{ data: { id: '0' } }, { data: { id: '1' } }, { data: { id: '2' } }, { data: { id: '3' } }];
+] as Event[];
 
 const graphElements = {
-  nodes: graphNodes,
+  nodes: nodes.map((node) => ({ data: node })),
   links: [
-    { source: '3', target: '0' },
-    { source: '3', target: '1' },
-    { source: '3', target: '2' },
-    { source: '0', target: '2' },
-    { source: '1', target: '2' },
+    { source: nodeD.id, target: nodeA.id },
+    { source: nodeD.id, target: nodeB.id },
+    { source: nodeD.id, target: nodeC.id },
+    { source: nodeA.id, target: nodeC.id },
+    { source: nodeB.id, target: nodeC.id },
   ],
 } as GraphElements;
 
@@ -36,7 +41,7 @@ const Simulation: React.FC = () => {
   const { time } = useSimulationContext();
 
   useEffect(() => {
-    dispatch({ type: 'serNodes', payload: nodes });
+    dispatch({ type: 'serNodes', payload: events });
   }, [dispatch]);
 
   return (
@@ -52,7 +57,7 @@ const Simulation: React.FC = () => {
               <ForceGraph graphElements={graphElements} renderNode={(node) => <SimulationNode node={node} />} />
             </Grid>
             <Grid item xs={6}>
-              <SimulationTimeline events={nodes} />
+              <SimulationTimeline events={events} />
             </Grid>
           </Grid>
         </Grid>

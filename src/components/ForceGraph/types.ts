@@ -4,7 +4,8 @@ export interface Idable {
   id: string;
 }
 
-export interface NodeData extends Idable {
+export interface Event {
+  node: GraphNode;
   startTime: number;
 }
 

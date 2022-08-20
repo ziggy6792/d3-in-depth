@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import _ from 'lodash';
-import { NodeData } from 'src/components/ForceGraph';
+import { Event } from 'src/components/ForceGraph';
 
 export interface ISumulationState {
   time: number;
-  nodes: NodeData[];
-  activeNodes: NodeData[];
+  nodes: Event[];
+  activeNodes: Event[];
   eventDuration: number;
 }
 
@@ -21,7 +21,7 @@ export type IAction =
     }
   | {
       type: 'serNodes';
-      payload: NodeData[];
+      payload: Event[];
     };
 
 export const initialState: ISumulationState = {

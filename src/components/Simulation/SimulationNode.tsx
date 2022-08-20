@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as d3 from 'd3';
 import { useEffect, useRef, useState } from 'react';
-import { GraphNode, NodeData, NodeInterface } from 'src/components/ForceGraph';
+import { GraphNode, Event, NodeInterface } from 'src/components/ForceGraph';
 import { TSelection } from 'src/d3Types';
 import { easeInterpolate } from 'src/utils/d3-utils';
 import { useSimulationContext } from './SimulaitionProvider';
@@ -34,7 +34,7 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
       return;
     }
     svg.select('rect').attr('fill', () => {
-      const myActiveNodes = activeNodes?.filter((n) => n.id === node.id);
+      const myActiveNodes = activeNodes?.filter((n) => n.node.id === node.id);
 
       if (myActiveNodes?.length > 0) {
         const mostActive = myActiveNodes[0];
@@ -49,7 +49,7 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
     <svg ref={svgRef}>
       <rect width={60} height={60} rx={20}></rect>
       <text fill='white' x={30} y={30} textAnchor='middle' dominantBaseline='middle' fontSize='2em'>
-        {node.id}
+        {node.name}
       </text>
     </svg>
   );
