@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import _ from 'lodash';
-import { Event } from './types';
+import { SimulationEvent } from './types';
 
 export interface ISumulationState {
   time: number;
-  events: Event[];
-  activeEvents: Event[];
+  events: SimulationEvent[];
+  activeEvents: SimulationEvent[];
   eventDuration: number;
 }
 
@@ -21,7 +21,7 @@ export type IAction =
     }
   | {
       type: 'setEvents';
-      payload: Event[];
+      payload: SimulationEvent[];
     };
 
 export const initialState: ISumulationState = {

@@ -6,7 +6,7 @@ import { GraphElements, ForceGraph, GraphNode } from 'src/components/ForceGraph'
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 import SimulationNode from './SimulationNode';
 import SimulationTimeline from './SimulationTimeline';
-import { Event } from './types';
+import { SimulationEvent } from './types';
 
 const nodeA = { id: '0', name: 'A' };
 const nodeB = { id: '1', name: 'B' };
@@ -24,7 +24,7 @@ const events = [
   // { id: '1', startTime: 25 },
   // { id: '2', name: 'C', startTime: 30 },
   // { id: '3', name: 'D', startTime: 40 },
-] as Event[];
+] as SimulationEvent[];
 
 const graphElements = {
   nodes: nodes.map((node) => ({ data: node })),

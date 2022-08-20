@@ -1,14 +1,14 @@
 import { Box, Typography } from '@mui/material';
-import { Event } from './types';
+import { SimulationEvent } from './types';
 import TimelineTable from 'src/components/TimelineTable';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 
 interface ISimulationTimelineProps {
-  events: Event[];
+  events: SimulationEvent[];
 }
 
 interface ISimulationTimelineRowProps {
-  event: Event;
+  event: SimulationEvent;
 }
 
 const SimulationTimelineRow: React.FC<ISimulationTimelineRowProps> = ({ event }) => {
