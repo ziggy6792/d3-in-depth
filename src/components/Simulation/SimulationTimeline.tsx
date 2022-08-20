@@ -26,7 +26,7 @@ const SimulationTimelineRow: React.FC<ISimulationTimelineRowProps> = ({ event })
 
 const SimulationTimeline: React.FC<ISimulationTimelineProps> = ({ events }) => {
   const { dispatch } = useDispatchSimulationContext();
-  const { mostRecentEvent } = useSimulationContext();
+  const { selectedEvent } = useSimulationContext();
 
   return (
     <TimelineTable
@@ -35,8 +35,8 @@ const SimulationTimeline: React.FC<ISimulationTimelineProps> = ({ events }) => {
         { name: 'Name', template: '2fr' },
       ]}
       rows={events}
-      onRowSelected={(event) => dispatch({ type: 'setTime', payload: event.startTime })}
-      selectedRow={mostRecentEvent}
+      onRowSelected={(event) => dispatch({ type: 'setSelectedEvent', payload: event })}
+      selectedRow={selectedEvent}
       renderRow={(event) => <SimulationTimelineRow event={event} />}
     />
   );

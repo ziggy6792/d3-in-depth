@@ -6,7 +6,7 @@ import { SimulationEvent } from './types';
 export interface ISumulationState {
   time: number;
   events: SimulationEvent[];
-  mostRecentEvent: SimulationEvent | null;
+  selectedEvent: SimulationEvent | null;
   activeEvents: SimulationEvent[];
   eventDuration: number;
 }
@@ -21,6 +21,10 @@ export type IAction =
       payload: number;
     }
   | {
+      type: 'setSelectedEvent';
+      payload: SimulationEvent;
+    }
+  | {
       type: 'setEvents';
       payload: SimulationEvent[];
     };
@@ -29,8 +33,24 @@ export const initialState: ISumulationState = {
   time: 0,
   events: [],
   activeEvents: null,
-  mostRecentEvent: null,
+  selectedEvent: null,
   eventDuration: 10,
+};
+
+const getActiveEvents = (
+  { events, eventDuration }: ISumulationState,
+  time: number,
+  selectedEvent: SimulationEvent = _(events).findLast((event) => time >= event.startTime)
+) => {
+  const activeEvents = _.chain(events)
+    .filter((node) => {
+      return time <= node.startTime + eventDuration && time >= node.startTime;
+    })
+    .value();
+
+  if (selectedEvent) return { activeEvents, selectedEvent: selectedEvent };
+
+  return { activeEvents, selectedEvent };
 };
 
 export const simulationReducer = (state: ISumulationState, action: IAction): ISumulationState => {
@@ -38,25 +58,25 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
 
   switch (type) {
     case 'setTime': {
-      const currTime = action.payload;
-
-      const activeEvents = _.chain(state.events)
-        .filter((node) => {
-          return currTime <= node.startTime + state.eventDuration && currTime >= node.startTime;
-        })
-        .value();
-
-      const mostRecentEvent = _(state.events).findLast((event) => currTime >= event.startTime);
-
-      return { ...state, time: action.payload, activeEvents, mostRecentEvent };
+      const time = action.payload;
+      const { activeEvents, selectedEvent } = getActiveEvents(state, time);
+      return { ...state, time, activeEvents, selectedEvent };
+    }
+    case 'setSelectedEvent': {
+      const newSelectedEvent = action.payload;
+      const { activeEvents, selectedEvent } = getActiveEvents(state, newSelectedEvent.startTime, newSelectedEvent);
+      return { ...state, time: selectedEvent.startTime, activeEvents, selectedEvent };
     }
     case 'incrementTime': {
-      return { ...state, time: state.time + action.payload };
+      const time = state.time + action.payload;
+      const { activeEvents, selectedEvent } = getActiveEvents(state, time);
+      return { ...state, time, activeEvents, selectedEvent };
     }
     case 'setEvents': {
       const events = _.orderBy(action.payload, (node) => node.startTime);
-
-      return { ...state, events };
+      const time = 0;
+      const { activeEvents, selectedEvent } = getActiveEvents(state, time);
+      return { ...state, time, events, activeEvents, selectedEvent };
     }
     default:
       return state;
