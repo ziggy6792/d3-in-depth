@@ -37,20 +37,19 @@ export const initialState: ISumulationState = {
   eventDuration: 10,
 };
 
-const getActiveEvents = (
-  { events, eventDuration }: ISumulationState,
-  time: number,
-  selectedEvent: SimulationEvent = _(events).findLast((event) => time >= event.startTime)
-) => {
+const getStateFromTime = (state: ISumulationState, newTime: number, newSelectedEvent?: SimulationEvent): ISumulationState => {
+  const { events, eventDuration } = state;
   const activeEvents = _.chain(events)
     .filter((node) => {
-      return time <= node.startTime + eventDuration && time >= node.startTime;
+      return newTime <= node.startTime + eventDuration && newTime >= node.startTime;
     })
     .value();
 
-  if (selectedEvent) return { activeEvents, selectedEvent: selectedEvent };
+  if (newSelectedEvent) return { ...state, activeEvents, selectedEvent: newSelectedEvent, time: newTime };
 
-  return { activeEvents, selectedEvent };
+  newSelectedEvent = newSelectedEvent || _(events).findLast((event) => newTime >= event.startTime);
+
+  return { ...state, activeEvents, selectedEvent: newSelectedEvent, time: newTime };
 };
 
 export const simulationReducer = (state: ISumulationState, action: IAction): ISumulationState => {
@@ -59,24 +58,20 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
   switch (type) {
     case 'setTime': {
       const time = action.payload;
-      const { activeEvents, selectedEvent } = getActiveEvents(state, time);
-      return { ...state, time, activeEvents, selectedEvent };
+      return getStateFromTime(state, time);
     }
     case 'setSelectedEvent': {
       const newSelectedEvent = action.payload;
-      const { activeEvents, selectedEvent } = getActiveEvents(state, newSelectedEvent.startTime, newSelectedEvent);
-      return { ...state, time: selectedEvent.startTime, activeEvents, selectedEvent };
+      return getStateFromTime(state, newSelectedEvent.startTime, newSelectedEvent);
     }
     case 'incrementTime': {
       const time = state.time + action.payload;
-      const { activeEvents, selectedEvent } = getActiveEvents(state, time);
-      return { ...state, time, activeEvents, selectedEvent };
+      return getStateFromTime(state, time);
     }
     case 'setEvents': {
       const events = _.orderBy(action.payload, (node) => node.startTime);
       const time = 0;
-      const { activeEvents, selectedEvent } = getActiveEvents({ ...state, events }, time);
-      return { ...state, time, events, activeEvents, selectedEvent };
+      return getStateFromTime({ ...state, events }, time);
     }
     default:
       return state;
