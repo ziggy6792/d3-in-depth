@@ -39,13 +39,14 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
   switch (type) {
     case 'setTime': {
       const currTime = action.payload;
+
       const activeEvents = _.chain(state.events)
         .filter((node) => {
           return currTime <= node.startTime + state.eventDuration && currTime >= node.startTime;
         })
         .value();
 
-      const mostRecentEvent = activeEvents[activeEvents.length - 1] || (state.time <= state.mostRecentEvent?.startTime ? state.mostRecentEvent : null);
+      const mostRecentEvent = _(state.events).findLast((event) => currTime >= event.startTime);
 
       return { ...state, time: action.payload, activeEvents, mostRecentEvent };
     }
