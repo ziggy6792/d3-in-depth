@@ -28,7 +28,7 @@ export const initialState: ISumulationState = {
   time: 0,
   nodes: [],
   activeNodes: null,
-  eventDuration: 10,
+  eventDuration: 30,
 };
 
 export const simulationReducer = (state: ISumulationState, action: IAction): ISumulationState => {

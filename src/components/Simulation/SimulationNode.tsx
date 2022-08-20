@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { useEffect, useRef, useState } from 'react';
 import { NodeData, NodeInterface } from 'src/components/ForceGraph';
 import { TSelection } from 'src/d3Types';
+import { easeInterpolate } from 'src/utils/d3-utils';
 import { useSimulationContext } from './SimulaitionProvider';
 
 interface ISimulationNodeProps {
@@ -18,13 +19,12 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
   const svgRef = useRef(null);
   const [svg, setSvg] = useState<null | TSelection>(null);
 
-  const colorScale = d3
+  const easingColorScale = d3
     .scaleLinear()
     .domain([0, eventDuration])
+    .interpolate(easeInterpolate(d3.easePolyInOut))
     .range([selectedColor, unselectedColor] as any[])
     .clamp(true);
-
-  console.log('activeNodes', activeNodes);
 
   useEffect(() => {
     if (!svg) {
@@ -34,8 +34,7 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
     svg.select('rect').attr('fill', () => {
       if (activeNodes?.find((n) => n === node)) {
         const colorX = Math.abs(node.startTime + 0.5 * eventDuration - time);
-
-        return colorScale(colorX);
+        return easingColorScale(colorX);
       }
       return unselectedColor;
     });
