@@ -5,7 +5,6 @@ export interface Idable {
 }
 
 export interface NodeData extends Idable {
-  name: string;
   startTime: number;
 }
 

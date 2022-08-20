@@ -49,7 +49,7 @@ const SimulationNode: React.FC<ISimulationNodeProps> = ({ node }) => {
     <svg ref={svgRef}>
       <rect width={60} height={60} rx={20}></rect>
       <text fill='white' x={30} y={30} textAnchor='middle' dominantBaseline='middle' fontSize='2em'>
-        {node.name}
+        {node.id}
       </text>
     </svg>
   );

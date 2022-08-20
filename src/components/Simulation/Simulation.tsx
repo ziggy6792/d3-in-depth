@@ -8,14 +8,17 @@ import SimulationNode from './SimulationNode';
 import SimulationTimeline from './SimulationTimeline';
 
 const nodes = [
-  { id: '0', name: 'A', startTime: 10 },
-  { id: '1', name: 'B', startTime: 20 },
-  { id: '0', name: 'A', startTime: 25 },
-  { id: '2', name: 'C', startTime: 30 },
-  { id: '3', name: 'D', startTime: 40 },
+  { id: '0', startTime: 10 },
+  { id: '0', startTime: 19 },
+  { id: '0', startTime: 28 },
+  { id: '0', startTime: 37 },
+  // { id: '1', name: 'B', startTime: 20 },
+  // { id: '1', startTime: 25 },
+  // { id: '2', name: 'C', startTime: 30 },
+  // { id: '3', name: 'D', startTime: 40 },
 ] as NodeData[];
 
-const graphNodes = _.uniqBy(nodes, (n) => n.id).map(({ id, name }) => ({ data: { id, name } }));
+const graphNodes = [{ data: { id: '0' } }, { data: { id: '1' } }, { data: { id: '2' } }, { data: { id: '3' } }];
 
 const graphElements = {
   nodes: graphNodes,

@@ -18,7 +18,7 @@ const SimulationTimelineRow: React.FC<ISimulationTimelineRowProps> = ({ node }) 
         <Typography color='white'>{node.startTime}</Typography>
       </Box>
       <Box padding={1}>
-        <Typography color='white'>{node.name}</Typography>
+        <Typography color='white'>{node.id}</Typography>
       </Box>
     </>
   );
