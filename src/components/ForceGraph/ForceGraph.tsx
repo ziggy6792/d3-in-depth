@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { D3DragEvent, SimulationLinkDatum } from 'd3';
-import { NodeInterface, GraphElements } from './types';
+import { NodeInterface, GraphElements, NodeData } from './types';
 import { TSelection } from 'src/d3Types';
 
 type Simulation = d3.Simulation<NodeInterface, SimulationLinkDatum<NodeInterface>>;
@@ -10,7 +10,7 @@ type DragEvent = D3DragEvent<SVGCircleElement, NodeInterface, NodeInterface>;
 
 interface FundGraphGeneratorProps {
   graphElements: GraphElements;
-  renderNode: (node: NodeInterface) => React.ReactNode;
+  renderNode: (node: NodeData) => React.ReactNode;
 }
 
 // ToDo: Make responsive
@@ -107,7 +107,7 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
         <g id='graph-labels'></g>
         {graphElements.nodes.map((node) => (
           <g className='node-container' key={node.data.id} opacity={0}>
-            <g className='node'>{renderNode(node)}</g>
+            <g className='node'>{renderNode(node.data)}</g>
           </g>
         ))}
       </svg>

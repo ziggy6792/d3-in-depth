@@ -6,7 +6,8 @@ import { NodeData } from 'src/components/ForceGraph';
 export interface ISumulationState {
   time: number;
   nodes: NodeData[];
-  activeNode: NodeData | null;
+  activeNodes: NodeData[];
+  eventDuration: number;
 }
 
 export type IAction =
@@ -26,7 +27,8 @@ export type IAction =
 export const initialState: ISumulationState = {
   time: 0,
   nodes: [],
-  activeNode: null,
+  activeNodes: null,
+  eventDuration: 10,
 };
 
 export const simulationReducer = (state: ISumulationState, action: IAction): ISumulationState => {
@@ -34,19 +36,23 @@ export const simulationReducer = (state: ISumulationState, action: IAction): ISu
 
   switch (type) {
     case 'setTime': {
-      const activeNode = _.chain(state.nodes)
-        .findLast((dec) => {
-          return +dec.startTime <= action.payload;
+      const currTime = action.payload;
+
+      const activeNodes = _.chain(state.nodes)
+        .filter((node) => {
+          return currTime <= node.startTime + state.eventDuration && currTime > node.startTime;
         })
         .value();
 
-      return { ...state, time: action.payload, activeNode };
+      return { ...state, time: action.payload, activeNodes };
     }
     case 'incrementTime': {
       return { ...state, time: state.time + action.payload };
     }
     case 'serNodes': {
-      return { ...state, nodes: action.payload };
+      const nodes = _.orderBy(action.payload, (node) => node.startTime);
+
+      return { ...state, nodes };
     }
     default:
       return state;
