@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import * as d3 from 'd3';
-import useInterval from 'src/hooks/useInterval';
 import { TSelection } from 'src/d3Types';
 import { makeStyles } from 'src/makeStyles';
-import { Button, Grid } from '@mui/material';
 import useResizeObserver from 'src/hooks/useResizeObserver';
 
 const margin = { right: 50, left: 50 };
@@ -12,6 +10,8 @@ const margin = { right: 50, left: 50 };
 interface IDragSliderProps {
   value: number;
   onValueChanged: (value: number) => void;
+  rangeMax: number;
+  rangeMin?: number;
 }
 
 const useStyles = makeStyles()(() => ({
@@ -53,7 +53,7 @@ const useStyles = makeStyles()(() => ({
   trackLines: {},
 }));
 
-const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged }) => {
+const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged, rangeMin = 0, rangeMax }) => {
   // Maybe don't need this
   const [svg, setSvg] = useState<null | TSelection>(null);
 
@@ -61,8 +61,6 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
   const handleRef = useRef<null | SVGCircleElement>(null);
   const labelRef = useRef<null | SVGTextElement>(null);
   const sliderRef = useRef<null | SVGGElement>(null);
-
-  const [moving, setMoving] = useState(false);
 
   const { classes, cx } = useStyles();
 
@@ -73,7 +71,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
     if (!dimensions) return null;
     return d3
       .scaleLinear()
-      .domain([0, 180])
+      .domain([rangeMin, rangeMax])
       .range([0, dimensions.width - margin.left - margin.right])
       .clamp(true);
   }, [dimensions]);
@@ -115,7 +113,6 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
     trackLines.call(
       d3.drag().on('drag', function (event) {
         onValueChanged(xScale.invert(event.x));
-        setMoving(false);
       })
     );
 

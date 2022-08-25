@@ -18,7 +18,7 @@ const nodeD = { id: '3', name: 'D' };
 
 const nodes = [nodeA, nodeB, nodeC, nodeD] as GraphNode[];
 
-const maxTime = 180;
+const maxTime = 60;
 
 const generateRandomEvents = () =>
   _(_.range(15).map(() => ({ node: nodes[_.random(0, nodes.length - 1)], startTime: _.random(0, maxTime) })))
@@ -46,8 +46,6 @@ const Simulation: React.FC = () => {
     fetchEvents();
   }, []);
 
-  const rangeMax = 180;
-
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -66,8 +64,8 @@ const Simulation: React.FC = () => {
                   playing={playing}
                   setPlaying={setPlaying}
                   onStep={() => {
-                    const incTime: number = time + rangeMax / 100;
-                    if (incTime > rangeMax) {
+                    const incTime: number = time + maxTime / 100;
+                    if (incTime > maxTime) {
                       dispatch({ type: 'setTime', payload: 0 });
                       return false;
                     }
@@ -79,6 +77,7 @@ const Simulation: React.FC = () => {
               <Grid item flexGrow={1}>
                 <DragSliderAnimation
                   value={time}
+                  rangeMax={maxTime}
                   onValueChanged={(value) => {
                     dispatch({ type: 'setTime', payload: value });
                     setPlaying(false);
