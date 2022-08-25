@@ -66,14 +66,6 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
 
   const { classes, cx } = useStyles();
 
-  // ToDo: move memos to hook
-  // const { width, height } = useMemo(() => {
-  //   if (!svg) {
-  //     return {};
-  //   }
-  //   return { width: +svg.attr('width') - margin.left - margin.right, height: +svg.attr('height') };
-  // }, [svg]);
-
   const wrapperRef = useRef<null | HTMLDivElement>();
   const dimensions = useResizeObserver(wrapperRef) as { width: number; height: number };
 
@@ -84,7 +76,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
       .domain([0, 180])
       .range([0, dimensions.width - margin.left - margin.right])
       .clamp(true);
-  }, [svg, dimensions]);
+  }, [dimensions]);
 
   useEffect(() => {
     if (!svg) return;
@@ -127,19 +119,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
       })
     );
 
-    // cool effect but remove for mow
-    // d3.transition() // Gratuitous intro!
-    //   .duration(750)
-    //   .tween('hue', function () {
-    //     var i = d3.interpolate(20, 0);
-    //     return function (t) {
-    //       onValueChanged(i(t));
-    //     };
-    //   });
-
     svg.attr('opacity', 1);
-
-    // onValueChanged(0);
   }, [svg, dimensions]);
 
   useInterval(() => {
@@ -154,52 +134,36 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
   }, 100);
 
   return (
-    // <Grid container direction='row' alignContent='stretch' alignItems='center' style={{ padding: 20 }}>
-    //   <Grid item>
-    //     <Button
-    //       variant='contained'
-    //       className={classes.playButton}
-    //       onClick={() => {
-    //         setMoving((prevValue) => !prevValue);
-    //       }}
-    //     >
-    //       {moving ? 'Pause' : 'Play'}
-    //     </Button>
-    //   </Grid>
-    //   <Grid item>
-    //     <div ref={wrapperRef} style={{ marginBottom: '2rem' }}>
-    //       <svg ref={svgRef} width='500' height='200' opacity={0}>
-    //         <g ref={sliderRef} className={classes.slider}>
-    //           <g className={classes.trackLines}>
-    //             {[classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
-    //               <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
-    //             ))}
-    //             <circle ref={handleRef} r={9} className={classes.handle}></circle>
-    //           </g>
-    //           <g className={classes.ticks}></g>
-    //           <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
-    //         </g>
-    //       </svg>
-    //     </div>
-    //   </Grid>
-    // </Grid>
-    <>
-      <div ref={wrapperRef} style={{ marginBottom: '2rem' }}>
-        <svg ref={svgRef} width='100%' opacity={0}>
-          <g ref={sliderRef} className={classes.slider}>
-            <g className={classes.trackLines}>
-              {dimensions &&
-                [classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
-                  <line key={className} x1={0} x2={dimensions.width - margin.left - margin.right} className={cx(className, classes.trackLine)} />
-                ))}
-              <circle ref={handleRef} r={9} className={classes.handle}></circle>
+    <Grid container direction='row' alignContent='stretch' alignItems='center'>
+      <Grid item>
+        <Button
+          variant='contained'
+          className={classes.playButton}
+          onClick={() => {
+            setMoving((prevValue) => !prevValue);
+          }}
+        >
+          {moving ? 'Pause' : 'Play'}
+        </Button>
+      </Grid>
+      <Grid item flexGrow={1}>
+        <div ref={wrapperRef}>
+          <svg ref={svgRef} width='100%' height={80} opacity={0}>
+            <g ref={sliderRef} className={classes.slider}>
+              <g className={classes.trackLines}>
+                {xScale &&
+                  [classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
+                    <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
+                  ))}
+                <circle ref={handleRef} r={9} className={classes.handle}></circle>
+              </g>
+              <g className={classes.ticks}></g>
+              <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
             </g>
-            <g className={classes.ticks}></g>
-            <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
-          </g>
-        </svg>
-      </div>
-    </>
+          </svg>
+        </div>
+      </Grid>
+    </Grid>
   );
 };
 
