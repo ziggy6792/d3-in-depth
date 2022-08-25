@@ -60,38 +60,34 @@ const TimelineTable = <RowType,>({ rows, rowHeight = '1fr', columns, ...rest }: 
   const { classes: rowClasses } = useRowStyles({ showHighlight: false, playing: false, isClickable: false });
 
   return (
-    <Grid container direction='column' rowSpacing={2} marginBottom={2}>
-      <Grid item container>
-        <Box sx={{ width: 1 }}>
-          <Box
-            display='grid'
-            gridTemplateColumns={gridTemplateColumns}
-            gridTemplateRows={`1fr repeat(${rows.length}, ${rowHeight}) auto`}
-            columnGap={0.4}
-            rowGap={1}
-          >
-            {/* Column highlights */}
-            {columns.map(({ name }, index) => (
-              <Box className={classes.boxBase} key={name} gridColumn={index + 1} gridRow='1/ -1' padding={1}></Box>
-            ))}
+    <Box>
+      <Box
+        display='grid'
+        gridTemplateColumns={gridTemplateColumns}
+        gridTemplateRows={`1fr repeat(${rows.length}, ${rowHeight}) auto`}
+        columnGap={0.4}
+        rowGap={1}
+      >
+        {/* Column highlights */}
+        {columns.map(({ name }, index) => (
+          <Box className={classes.boxBase} key={name} gridColumn={index + 1} gridRow='1/ -1' padding={1}></Box>
+        ))}
 
-            <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={1}>
-              <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
-                {columns.map(({ name }) => (
-                  <Box key={name} padding={1}>
-                    <Typography color='white'> {name}</Typography>
-                  </Box>
-                ))}
+        <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={1}>
+          <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
+            {columns.map(({ name }) => (
+              <Box key={name} padding={1}>
+                <Typography color='white'> {name}</Typography>
               </Box>
-            </Box>
-
-            {rows.map((row, index) => (
-              <TimelineTableRow index={index} key={index} row={row} gridTemplateColumns={gridTemplateColumns} {...rest} />
             ))}
           </Box>
         </Box>
-      </Grid>
-    </Grid>
+
+        {rows.map((row, index) => (
+          <TimelineTableRow index={index} key={index} row={row} gridTemplateColumns={gridTemplateColumns} {...rest} />
+        ))}
+      </Box>
+    </Box>
   );
 };
 
