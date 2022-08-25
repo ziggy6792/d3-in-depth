@@ -1,28 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button } from '@mui/material';
-import _ from 'lodash';
-import React, { useState } from 'react';
+import React from 'react';
 import useInterval from 'src/hooks/useInterval';
 
 interface IPlayButtonProps {
-  value: number;
-  onValueChanged: (value: number) => void;
-  rangeMax: number;
-  step: () => boolean;
+  onStep: () => boolean;
+  playing: boolean;
+  setPlaying: (playing: boolean) => void;
 }
 
-export const PlayButton: React.FC<IPlayButtonProps> = ({ onValueChanged, rangeMax, value, step }) => {
-  const [moving, setMoving] = useState(false);
-
+export const PlayButton: React.FC<IPlayButtonProps> = ({ onStep, playing, setPlaying }) => {
   useInterval(() => {
-    if (moving) {
-      // let newSliderValue: number = value + rangeMax / 100;
-      // if (newSliderValue > rangeMax) {
-      //   setMoving(false);
-      //   newSliderValue = 0;
-      // }
-      // onValueChanged(newSliderValue);
-      setMoving(step());
+    if (playing) {
+      setPlaying(onStep());
     }
   }, 100);
 
@@ -31,10 +21,10 @@ export const PlayButton: React.FC<IPlayButtonProps> = ({ onValueChanged, rangeMa
       variant='contained'
       sx={{ width: 80 }}
       onClick={() => {
-        setMoving((prevValue) => !prevValue);
+        setPlaying(!playing);
       }}
     >
-      {moving ? 'Pause' : 'Play'}
+      {playing ? 'Pause' : 'Play'}
     </Button>
   );
 };

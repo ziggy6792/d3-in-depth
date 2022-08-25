@@ -48,6 +48,8 @@ const Simulation: React.FC = () => {
 
   const rangeMax = 180;
 
+  const [playing, setPlaying] = useState(false);
+
   return (
     <>
       <div style={{ width: '100vw', height: '100vh' }}>
@@ -61,21 +63,27 @@ const Simulation: React.FC = () => {
             <Grid container direction='row' alignContent='stretch' alignItems='center'>
               <Grid item>
                 <PlayButton
-                  value={time}
-                  onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })}
-                  rangeMax={180}
-                  step={() => {
+                  playing={playing}
+                  setPlaying={setPlaying}
+                  onStep={() => {
                     const incTime: number = time + rangeMax / 100;
                     if (incTime > rangeMax) {
                       dispatch({ type: 'setTime', payload: 0 });
                       return false;
                     }
                     dispatch({ type: 'setTime', payload: incTime });
+                    return true;
                   }}
                 />
               </Grid>
               <Grid item flexGrow={1}>
-                <DragSliderAnimation value={time} onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })} />
+                <DragSliderAnimation
+                  value={time}
+                  onValueChanged={(value) => {
+                    dispatch({ type: 'setTime', payload: value });
+                    setPlaying(false);
+                  }}
+                />
               </Grid>
             </Grid>
           </Grid>
