@@ -7,9 +7,10 @@ interface IPlayButtonProps {
   onStep: () => boolean;
   playing: boolean;
   setPlaying: (playing: boolean) => void;
+  stepsPerSecond: number
 }
 
-export const PlayButton: React.FC<IPlayButtonProps> = ({ onStep, playing, setPlaying }) => {
+export const PlayButton: React.FC<IPlayButtonProps> = ({ onStep, playing, setPlaying, stepsPerSecond }) => {
   useInterval(() => {
     if (playing) {
       setPlaying(onStep());

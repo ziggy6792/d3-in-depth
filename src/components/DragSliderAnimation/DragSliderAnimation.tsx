@@ -12,6 +12,7 @@ interface IDragSliderProps {
   onValueChanged: (value: number) => void;
   rangeMax: number;
   rangeMin?: number;
+  ticks?: number;
 }
 
 const useStyles = makeStyles()(() => ({
@@ -53,7 +54,7 @@ const useStyles = makeStyles()(() => ({
   trackLines: {},
 }));
 
-const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged, rangeMin = 0, rangeMax }) => {
+const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged, rangeMin = 0, rangeMax, ticks = 10 }) => {
   // Maybe don't need this
   const [svg, setSvg] = useState<null | TSelection>(null);
 
@@ -100,7 +101,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
       .selectAll(`.${classes.ticks}`)
       .attr('transform', 'translate(0,' + 18 + ')')
       .selectAll('text')
-      .data(xScale.ticks(10))
+      .data(xScale.ticks(ticks))
       .join('text')
       .attr('x', xScale)
       .attr('text-anchor', 'middle')

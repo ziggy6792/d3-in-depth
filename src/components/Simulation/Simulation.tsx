@@ -36,9 +36,13 @@ const graphElements = {
   ],
 } as GraphElements;
 
+const stepsPerSecond = 10;
+
 const Simulation: React.FC = () => {
   const { dispatch } = useDispatchSimulationContext();
   const { time, events } = useSimulationContext();
+
+  const [speed, setSpeed] = useState(1);
 
   const fetchEvents = useCallback(() => dispatch({ type: 'setEvents', payload: generateRandomEvents() }), [dispatch]);
 
@@ -63,8 +67,9 @@ const Simulation: React.FC = () => {
                 <PlayButton
                   playing={playing}
                   setPlaying={setPlaying}
+                  stepsPerSecond={stepsPerSecond}
                   onStep={() => {
-                    const incTime: number = time + maxTime / 100;
+                    const incTime = time + speed / stepsPerSecond;
                     if (incTime > maxTime) {
                       dispatch({ type: 'setTime', payload: 0 });
                       return false;
@@ -81,6 +86,16 @@ const Simulation: React.FC = () => {
                   onValueChanged={(value) => {
                     dispatch({ type: 'setTime', payload: value });
                     setPlaying(false);
+                  }}
+                />
+              </Grid>
+              <Grid item>
+                <DragSliderAnimation
+                  value={speed}
+                  rangeMax={5}
+                  ticks={4}
+                  onValueChanged={(value) => {
+                    setSpeed(value);
                   }}
                 />
               </Grid>
