@@ -147,7 +147,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
         </Button>
       </Grid>
       <Grid item flexGrow={1}>
-        <div ref={wrapperRef}>
+        <div ref={wrapperRef} style={{ width: '100%', height: '100%' }}>
           <svg ref={svgRef} width='100%' height={80} opacity={0}>
             <g ref={sliderRef} className={classes.slider}>
               <g className={classes.trackLines}>

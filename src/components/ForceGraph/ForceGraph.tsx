@@ -14,10 +14,6 @@ interface FundGraphGeneratorProps {
   renderNode: (node: GraphNode) => React.ReactNode;
 }
 
-// ToDo: Make responsive
-const svgHeight = 800;
-// const svgWidth = 800;
-
 export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, renderNode }) => {
   const svgRef = useRef(null);
   const [svg, setSvg] = useState<null | TSelection>(null);
@@ -119,8 +115,8 @@ export const ForceGraph: React.FC<FundGraphGeneratorProps> = ({ graphElements, r
 
   return (
     <>
-      <div ref={wrapperRef}>
-        <svg ref={svgRef} width='100%' height={svgHeight}>
+      <div ref={wrapperRef} style={{ width: '100%', height: '100%' }}>
+        <svg ref={svgRef} width='100%' height='100%'>
           <g id='graph' opacity={0}>
             <g id='graph-links' stroke='#999' strokeOpacity='0.6'></g>
             <g id='graph-labels'></g>
