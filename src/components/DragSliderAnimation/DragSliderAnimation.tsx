@@ -13,6 +13,7 @@ interface IDragSliderProps {
   rangeMax: number;
   rangeMin?: number;
   ticks?: number;
+  handleFormatter?: (value: number) => string;
 }
 
 const useStyles = makeStyles()(() => ({
@@ -54,7 +55,14 @@ const useStyles = makeStyles()(() => ({
   trackLines: {},
 }));
 
-const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged, rangeMin = 0, rangeMax, ticks = 10 }) => {
+const DragSliderAnimation: React.FC<IDragSliderProps> = ({
+  value,
+  onValueChanged,
+  rangeMin = 0,
+  rangeMax,
+  ticks = 10,
+  handleFormatter = (sliderValue) => Math.floor(sliderValue),
+}) => {
   // Maybe don't need this
   const [svg, setSvg] = useState<null | TSelection>(null);
 
@@ -82,7 +90,7 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
     if (!xScale) return;
     // update slider
     d3.select(handleRef.current).attr('cx', xScale(value));
-    d3.select(labelRef.current).attr('x', xScale(value)).text(Math.floor(value));
+    d3.select(labelRef.current).attr('x', xScale(value)).text(handleFormatter(value));
   }, [svg, value, xScale]);
 
   // Draw initial d3

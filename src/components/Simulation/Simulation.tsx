@@ -94,6 +94,7 @@ const Simulation: React.FC = () => {
                   value={speed}
                   rangeMax={5}
                   ticks={4}
+                  handleFormatter={(value) => value.toFixed(1) + 'x'}
                   onValueChanged={(value) => {
                     setSpeed(value);
                   }}
