@@ -53,11 +53,11 @@ const Simulation: React.FC = () => {
               Fetch Events
             </Button>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} margin={6}>
             <DragSliderAnimation value={time} onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })} />
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Grid container direction='row'>
               <Grid item xs={6}>
                 <ForceGraph graphElements={graphElements} renderNode={(node) => <SimulationNode node={node} />} />
@@ -66,7 +66,7 @@ const Simulation: React.FC = () => {
                 <SimulationTimeline events={events} />
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </div>
     </>

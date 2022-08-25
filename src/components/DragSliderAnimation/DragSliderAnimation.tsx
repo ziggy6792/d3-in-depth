@@ -67,39 +67,32 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
   const { classes, cx } = useStyles();
 
   // ToDo: move memos to hook
-  const { width, height } = useMemo(() => {
-    if (!svg) {
-      return {};
-    }
-    return { width: +svg.attr('width') - margin.left - margin.right, height: +svg.attr('height') };
-  }, [svg]);
+  // const { width, height } = useMemo(() => {
+  //   if (!svg) {
+  //     return {};
+  //   }
+  //   return { width: +svg.attr('width') - margin.left - margin.right, height: +svg.attr('height') };
+  // }, [svg]);
 
   const wrapperRef = useRef<null | HTMLDivElement>();
   const dimensions = useResizeObserver(wrapperRef) as { width: number; height: number };
 
   const xScale = useMemo(() => {
-    return d3.scaleLinear().domain([0, 180]).range([0, width]).clamp(true);
-  }, [svg]);
-
-  const updateSlider = useCallback(
-    (newValue: number) => {
-      if (!svg) return;
-      // svg.style('background-color', d3.hsl(newValue, 0.8, 0.8) as any);
-      d3.select(handleRef.current).attr('cx', xScale(newValue));
-      d3.select(labelRef.current).attr('x', xScale(newValue)).text(Math.floor(newValue));
-    },
-    [svg]
-  );
+    if (!dimensions) return null;
+    return d3
+      .scaleLinear()
+      .domain([0, 180])
+      .range([0, dimensions.width - margin.left - margin.right])
+      .clamp(true);
+  }, [svg, dimensions]);
 
   useEffect(() => {
-    if (!svg) {
-      setSvg(d3.select(svgRef.current));
-      return;
-    }
-    updateSlider(value);
-  }, [svg, value]);
-
-  console.log('dimensions', dimensions);
+    if (!svg) return;
+    if (!xScale) return;
+    // update slider
+    d3.select(handleRef.current).attr('cx', xScale(value));
+    d3.select(labelRef.current).attr('x', xScale(value)).text(Math.floor(value));
+  }, [svg, value, xScale]);
 
   // Draw initial d3
   useEffect(() => {
@@ -107,6 +100,9 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
       setSvg(d3.select(svgRef.current));
       return;
     }
+    if (!dimensions) return;
+
+    const { height } = dimensions;
 
     const slider = svg.select(`.${classes.slider}`).attr('transform', 'translate(' + margin.left + ',' + height / 2 + ')');
 
@@ -143,8 +139,8 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
 
     svg.attr('opacity', 1);
 
-    onValueChanged(0);
-  }, [svg]);
+    // onValueChanged(0);
+  }, [svg, dimensions]);
 
   useInterval(() => {
     if (moving) {
@@ -189,12 +185,13 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
     // </Grid>
     <>
       <div ref={wrapperRef} style={{ marginBottom: '2rem' }}>
-        <svg ref={svgRef} width='500' height='200' opacity={0}>
+        <svg ref={svgRef} width='100%' opacity={0}>
           <g ref={sliderRef} className={classes.slider}>
             <g className={classes.trackLines}>
-              {[classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
-                <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
-              ))}
+              {dimensions &&
+                [classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
+                  <line key={className} x1={0} x2={dimensions.width - margin.left - margin.right} className={cx(className, classes.trackLine)} />
+                ))}
               <circle ref={handleRef} r={9} className={classes.handle}></circle>
             </g>
             <g className={classes.ticks}></g>
