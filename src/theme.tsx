@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material';
-import { alpha } from '@mui/material/styles';
 
 type MyType = typeof palette['common'];
 

@@ -38,16 +38,17 @@ export const initialState: ISumulationState = {
 };
 
 const updateState = (state: ISumulationState, newState: Partial<ISumulationState>): ISumulationState => {
-  const { events, eventDuration } = state;
-  const { time: newTime, selectedEvent: newSelectedEvent } = newState;
+  const mergedState = { ...state, ...newState };
+
+  const { time, events, eventDuration } = mergedState;
 
   const activeEvents = _.chain(events)
     .filter((node) => {
-      return newTime <= node.startTime + eventDuration && newTime >= node.startTime;
+      return time <= node.startTime + eventDuration && time >= node.startTime;
     })
     .value();
 
-  return { ...state, ...newState, activeEvents, selectedEvent: newSelectedEvent || _(events).findLast((event) => newTime >= event.startTime) };
+  return { ...mergedState, activeEvents, selectedEvent: newState.selectedEvent || _(events).findLast((event) => time >= event.startTime) };
 };
 
 export const simulationReducer = (state: ISumulationState, action: IAction): ISumulationState => {
