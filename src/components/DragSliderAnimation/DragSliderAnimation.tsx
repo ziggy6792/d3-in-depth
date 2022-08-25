@@ -5,6 +5,7 @@ import useInterval from 'src/hooks/useInterval';
 import { TSelection } from 'src/d3Types';
 import { makeStyles } from 'src/makeStyles';
 import { Button, Grid } from '@mui/material';
+import useResizeObserver from 'src/hooks/useResizeObserver';
 
 const margin = { right: 50, left: 50 };
 
@@ -73,6 +74,9 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
     return { width: +svg.attr('width') - margin.left - margin.right, height: +svg.attr('height') };
   }, [svg]);
 
+  const wrapperRef = useRef<null | HTMLDivElement>();
+  const dimensions = useResizeObserver(wrapperRef) as { width: number; height: number };
+
   const xScale = useMemo(() => {
     return d3.scaleLinear().domain([0, 180]).range([0, width]).clamp(true);
   }, [svg]);
@@ -94,6 +98,8 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
     }
     updateSlider(value);
   }, [svg, value]);
+
+  console.log('dimensions', dimensions);
 
   // Draw initial d3
   useEffect(() => {
@@ -152,20 +158,38 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
   }, 100);
 
   return (
-    <Grid container direction='row' alignContent='stretch' alignItems='center' style={{ padding: 20 }}>
-      <Grid item>
-        <Button
-          variant='contained'
-          className={classes.playButton}
-          onClick={() => {
-            setMoving((prevValue) => !prevValue);
-          }}
-        >
-          {moving ? 'Pause' : 'Play'}
-        </Button>
-      </Grid>
-      <Grid item>
-        <svg ref={svgRef} width='960' height='200' opacity={0}>
+    // <Grid container direction='row' alignContent='stretch' alignItems='center' style={{ padding: 20 }}>
+    //   <Grid item>
+    //     <Button
+    //       variant='contained'
+    //       className={classes.playButton}
+    //       onClick={() => {
+    //         setMoving((prevValue) => !prevValue);
+    //       }}
+    //     >
+    //       {moving ? 'Pause' : 'Play'}
+    //     </Button>
+    //   </Grid>
+    //   <Grid item>
+    //     <div ref={wrapperRef} style={{ marginBottom: '2rem' }}>
+    //       <svg ref={svgRef} width='500' height='200' opacity={0}>
+    //         <g ref={sliderRef} className={classes.slider}>
+    //           <g className={classes.trackLines}>
+    //             {[classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
+    //               <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
+    //             ))}
+    //             <circle ref={handleRef} r={9} className={classes.handle}></circle>
+    //           </g>
+    //           <g className={classes.ticks}></g>
+    //           <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
+    //         </g>
+    //       </svg>
+    //     </div>
+    //   </Grid>
+    // </Grid>
+    <>
+      <div ref={wrapperRef} style={{ marginBottom: '2rem' }}>
+        <svg ref={svgRef} width='500' height='200' opacity={0}>
           <g ref={sliderRef} className={classes.slider}>
             <g className={classes.trackLines}>
               {[classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
@@ -177,8 +201,8 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
             <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
           </g>
         </svg>
-      </Grid>
-    </Grid>
+      </div>
+    </>
   );
 };
 

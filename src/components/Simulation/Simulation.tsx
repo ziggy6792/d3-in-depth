@@ -23,14 +23,6 @@ const generateRandomEvents = () =>
     .orderBy((e) => e.startTime)
     .value() as SimulationEvent[];
 
-// const events = [
-//   { node: nodeA, startTime: 10 },
-//   { node: nodeA, startTime: 19 },
-//   { node: nodeA, startTime: 28 },
-//   { node: nodeA, startTime: 37 },
-
-// ] as SimulationEvent[];
-
 const graphElements = {
   nodes: nodes.map((node) => ({ data: node })),
   links: [
@@ -54,26 +46,29 @@ const Simulation: React.FC = () => {
 
   return (
     <>
-      <Grid direction='column' container style={{ width: '100vw', height: '100vh', backgroundImage: 'linear-gradient(rgb(11, 21, 64), rgb(35, 5, 38))' }}>
-        <Button variant='contained' onClick={() => fetchEvents()}>
-          Fetch Events
-        </Button>
+      <div style={{ width: '100vw', height: '100vh' }}>
+        <Grid container direction='column'>
+          <Grid item xs={12}>
+            <Button variant='contained' onClick={() => fetchEvents()}>
+              Fetch Events
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <DragSliderAnimation value={time} onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })} />
+          </Grid>
 
-        <Grid item>
-          <DragSliderAnimation value={time} onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })} />
-        </Grid>
-
-        <Grid item>
-          <Grid container direction='row'>
-            <Grid item xs={6}>
-              <ForceGraph graphElements={graphElements} renderNode={(node) => <SimulationNode node={node} />} />
-            </Grid>
-            <Grid item xs={6}>
-              <SimulationTimeline events={events} />
+          <Grid item xs={12}>
+            <Grid container direction='row'>
+              <Grid item xs={6}>
+                <ForceGraph graphElements={graphElements} renderNode={(node) => <SimulationNode node={node} />} />
+              </Grid>
+              <Grid item xs={6}>
+                <SimulationTimeline events={events} />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </div>
     </>
   );
 };
