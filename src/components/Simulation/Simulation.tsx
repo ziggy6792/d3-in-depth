@@ -2,7 +2,7 @@
 import { Button, Grid } from '@mui/material';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
+import DragSliderAnimation from 'src/components/DragSlider';
 import { GraphElements, ForceGraph, GraphNode } from 'src/components/ForceGraph';
 import useInterval from 'src/hooks/useInterval';
 import { PlayButton } from './PlayButton';
