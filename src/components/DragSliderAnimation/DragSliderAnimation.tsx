@@ -122,48 +122,22 @@ const DragSliderAnimation: React.FC<IDragSliderProps> = ({ value, onValueChanged
     svg.attr('opacity', 1);
   }, [svg, dimensions]);
 
-  useInterval(() => {
-    if (moving) {
-      let newSliderValue: number = value + xScale.domain()[1] / 100;
-      if (newSliderValue > xScale.domain()[1]) {
-        setMoving(false);
-        newSliderValue = 0;
-      }
-      onValueChanged(newSliderValue);
-    }
-  }, 100);
-
   return (
-    <Grid container direction='row' alignContent='stretch' alignItems='center'>
-      <Grid item>
-        <Button
-          variant='contained'
-          className={classes.playButton}
-          onClick={() => {
-            setMoving((prevValue) => !prevValue);
-          }}
-        >
-          {moving ? 'Pause' : 'Play'}
-        </Button>
-      </Grid>
-      <Grid item flexGrow={1}>
-        <div ref={wrapperRef} style={{ width: '100%', height: '100%' }}>
-          <svg ref={svgRef} width='100%' height={80} opacity={0}>
-            <g ref={sliderRef} className={classes.slider}>
-              <g className={classes.trackLines}>
-                {xScale &&
-                  [classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
-                    <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
-                  ))}
-                <circle ref={handleRef} r={9} className={classes.handle}></circle>
-              </g>
-              <g className={classes.ticks}></g>
-              <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
-            </g>
-          </svg>
-        </div>
-      </Grid>
-    </Grid>
+    <div ref={wrapperRef} style={{ width: '100%', height: '100%' }}>
+      <svg ref={svgRef} width='100%' height={80} opacity={0}>
+        <g ref={sliderRef} className={classes.slider}>
+          <g className={classes.trackLines}>
+            {xScale &&
+              [classes.track, classes.trackInset, classes.trackOverlay].map((className) => (
+                <line key={className} x1={xScale.range()[0]} x2={xScale.range()[1]} className={cx(className, classes.trackLine)} />
+              ))}
+            <circle ref={handleRef} r={9} className={classes.handle}></circle>
+          </g>
+          <g className={classes.ticks}></g>
+          <text ref={labelRef} className={classes.label} textAnchor='middle' transform={'translate(0,' + -25 + ')'}></text>
+        </g>
+      </svg>
+    </div>
   );
 };
 

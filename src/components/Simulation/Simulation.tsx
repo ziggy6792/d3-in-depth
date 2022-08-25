@@ -1,9 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Grid } from '@mui/material';
 import _ from 'lodash';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DragSliderAnimation from 'src/components/DragSliderAnimation/DragSliderAnimation';
 import { GraphElements, ForceGraph, GraphNode } from 'src/components/ForceGraph';
+import useInterval from 'src/hooks/useInterval';
+import { PlayButton } from './PlayButton';
 import { useDispatchSimulationContext, useSimulationContext } from './SimulaitionProvider';
 import SimulationNode from './SimulationNode';
 import SimulationTimeline from './SimulationTimeline';
@@ -44,6 +46,8 @@ const Simulation: React.FC = () => {
     fetchEvents();
   }, []);
 
+  const rangeMax = 180;
+
   return (
     <>
       <div style={{ width: '100vw', height: '100vh' }}>
@@ -54,7 +58,26 @@ const Simulation: React.FC = () => {
             </Button>
           </Grid>
           <Grid item xs={12} margin={6}>
-            <DragSliderAnimation value={time} onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })} />
+            <Grid container direction='row' alignContent='stretch' alignItems='center'>
+              <Grid item>
+                <PlayButton
+                  value={time}
+                  onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })}
+                  rangeMax={180}
+                  step={() => {
+                    const incTime: number = time + rangeMax / 100;
+                    if (incTime > rangeMax) {
+                      dispatch({ type: 'setTime', payload: 0 });
+                      return false;
+                    }
+                    dispatch({ type: 'setTime', payload: incTime });
+                  }}
+                />
+              </Grid>
+              <Grid item flexGrow={1}>
+                <DragSliderAnimation value={time} onValueChanged={(value) => dispatch({ type: 'setTime', payload: value })} />
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid item xs={12}>
