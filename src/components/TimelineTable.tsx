@@ -1,5 +1,5 @@
-import { memo, useMemo } from 'react';
-import { alpha, Box, Grid, Typography } from '@mui/material';
+import { useMemo } from 'react';
+import { alpha, Box, Typography } from '@mui/material';
 import { makeStyles } from 'src/makeStyles';
 
 const useTableStyles = makeStyles()((theme) => ({
@@ -23,8 +23,8 @@ const useRowStyles = makeStyles<IRowStylesProp>()((theme, { showHighlight, playi
     borderRadius: theme.spacing(1),
     backgroundBlendMode: 'multiply',
     zIndex: 0,
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
+    marginLeft: '-3px',
+    marginRight: '-3px',
     border: '3px solid',
     borderColor: playing ? theme.palette.primary.main : 'transparent',
     '&:hover': isClickable
@@ -64,20 +64,31 @@ const TimelineTable = <RowType,>({ rows, rowHeight = '1fr', columns, ...rest }: 
       <Box
         display='grid'
         gridTemplateColumns={gridTemplateColumns}
-        gridTemplateRows={`1fr repeat(${rows.length}, ${rowHeight}) auto`}
+        gridTemplateRows={`40px repeat(${rows.length}, ${rowHeight}) auto`}
         columnGap={0.4}
         rowGap={1}
+        sx={{ paddingX: '10px' }}
       >
         {/* Column highlights */}
         {columns.map(({ name }, index) => (
-          <Box className={classes.boxBase} key={name} gridColumn={index + 1} gridRow='1/ -1' padding={1}></Box>
+          <Box
+            className={classes.boxBase}
+            key={name}
+            sx={{
+              marginLeft: index == 0 ? '-10px' : undefined,
+              marginRight: index == columns.length - 1 ? '-10px' : undefined,
+            }}
+            gridColumn={index + 1}
+            gridRow='1/ -1'
+            padding={1}
+          ></Box>
         ))}
 
         <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={1}>
           <Box display='grid' gridTemplateColumns={gridTemplateColumns}>
             {columns.map(({ name }) => (
               <Box key={name} padding={1}>
-                <Typography color='white'> {name}</Typography>
+                <Typography color='white'>{name}</Typography>
               </Box>
             ))}
           </Box>
@@ -98,7 +109,11 @@ interface TimelineTableRowProps<RowType> extends ITimelineBaseProps<RowType> {
 }
 
 const TimelineTableRow = <RowType,>({ row, index, gridTemplateColumns, selectedRow, renderRow, onRowSelected }: TimelineTableRowProps<RowType>) => {
-  const { classes: rowClasses } = useRowStyles({ showHighlight: index % 2 === 0, playing: row === selectedRow, isClickable: true });
+  const { classes: rowClasses } = useRowStyles({
+    showHighlight: index % 2 === 0,
+    playing: row === selectedRow,
+    isClickable: true,
+  });
 
   return (
     <Box className={rowClasses.tableRow} gridColumn='1/ -1' gridRow={index + 2} onClick={() => onRowSelected(row)}>
